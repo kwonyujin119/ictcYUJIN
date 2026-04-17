@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>현장지휘관 훈련 포털 — 인천소방학교</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #c0392b;
+  --black: #111;
+  --white: #fff;
+  --bg-light: #f4f4f4;
+  --bg-dark: #0a0a0a;
+  --border: #e0e0e0;
+  --muted: #888;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; }
+body { font-family: 'Noto Sans KR', sans-serif; min-height: 100vh; background: var(--bg-light); }
+
+/* ── 헤더 ── */
+.site-header {
+  background: #000; border-bottom: 3px solid var(--accent);
+  padding: 20px 36px; display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 200;
+}
+.site-icon { width: 44px; height: 44px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.site-title h1 { font-size: 1.1rem; font-weight: 900; color: #fff; }
+.site-title p  { font-size: 0.6rem; color: #666; font-family: 'DM Mono', monospace; letter-spacing: 2px; margin-top: 3px; }
+
+/* ── 탭 ── */
+.tab-nav { background: #000; display: flex; border-bottom: 1px solid #222; padding: 0 36px; }
+.tab-btn {
+  background: none; border: none; color: #666;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem; font-weight: 600;
+  padding: 14px 26px; cursor: pointer; position: relative; transition: color .2s;
+  white-space: nowrap;
+}
+.tab-btn::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transition: transform .2s; }
+.tab-btn:hover { color: #ccc; }
+.tab-btn.active { color: #fff; }
+.tab-btn.active::after { transform: scaleX(1); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ══════════════ TAB1 질문리스트 ══════════════ */
+#tab1 { background: var(--bg-light); padding-bottom: 60px; }
+
+.prog-wrap { background: #fff; border-bottom: 1px solid var(--border); padding: 10px 36px; display: flex; align-items: center; gap: 14px; }
+.prog-bg { flex: 1; height: 5px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--accent); width: 0%; transition: width .4s ease; }
+.prog-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+.prog-label span { color: var(--accent); font-weight: 700; }
+
+.stage-bar { display: flex; align-items: center; gap: 12px; margin: 28px 36px 12px; }
+.stage-bar span { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+.stage-bar-line { flex: 1; height: 1px; background: var(--border); }
+
+.qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 36px 8px; }
+
+.qa-card { background: #fff; border: 1.5px solid var(--border); cursor: pointer; user-select: none; transition: border-color .2s, box-shadow .2s, transform .15s; overflow: hidden; }
+.qa-card:hover { border-color: #bbb; box-shadow: 0 4px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
+.qa-card.open { border-color: var(--accent); box-shadow: 0 4px 24px rgba(192,57,43,.12); }
+
+.qa-card-q { padding: 18px 16px; display: flex; align-items: flex-start; gap: 12px; }
+.q-num { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--accent); font-weight: 700; flex-shrink: 0; padding-top: 3px; min-width: 28px; }
+.q-text { font-size: 0.88rem; font-weight: 700; line-height: 1.5; color: var(--black); word-break: keep-all; flex: 1; }
+.q-arr { font-size: 0.75rem; color: var(--muted); flex-shrink: 0; padding-top: 4px; transition: transform .25s; margin-left: 6px; }
+.qa-card.open .q-arr { transform: rotate(180deg); color: var(--accent); }
+
+.qa-card-a { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(.4,0,.2,1); }
+.qa-card.open .qa-card-a { max-height: 700px; }
+.qa-card-a-inner { border-top: 1px solid #eee; background: #fdf0ef; padding: 14px 16px 16px; }
+.a-sum { font-size: 0.82rem; font-weight: 700; color: var(--accent); line-height: 1.6; margin-bottom: 10px; word-break: keep-all; }
+.a-ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.a-ul li { font-size: 0.78rem; color: #444; line-height: 1.7; display: flex; align-items: flex-start; gap: 7px; word-break: keep-all; }
+.a-ul li::before { content: '▸'; color: var(--accent); font-size: 0.6rem; flex-shrink: 0; margin-top: 5px; }
+
+.qa-footer { text-align: center; margin-top: 24px; }
+.qa-reset-btn { background: none; border: 1px solid #ccc; color: #999; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; padding: 10px 32px; cursor: pointer; transition: border-color .2s, color .2s; }
+.qa-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══════════════ TAB2 체크리스트 ══════════════ */
+#tab2 { background: var(--bg-dark); padding-bottom: 60px; min-height: 80vh; }
+
+.ck-prog-wrap { background: #000; padding: 10px 36px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 14px; }
+.ck-prog-bg { flex: 1; height: 5px; background: #222; border-radius: 3px; overflow: hidden; }
+.ck-prog-fill { height: 100%; background: var(--accent); width: 0%; transition: width .4s ease; }
+.ck-prog-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: #555; white-space: nowrap; }
+.ck-prog-label span { color: var(--accent); font-weight: 700; }
+
+.ck-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 28px 36px; max-width: 1200px; margin: 0 auto; }
+
+.ck-card { background: #000; border: 2px solid #2a2a2a; cursor: pointer; user-select: none; position: relative; overflow: hidden; transition: border-color .2s, transform .15s, box-shadow .2s; min-height: 140px; display: flex; flex-direction: column; }
+.ck-card::before { content: ''; position: absolute; inset: 0; background: #fff; transform: scaleY(0); transform-origin: bottom; transition: transform .28s cubic-bezier(.4,0,.2,1); z-index: 0; }
+.ck-card.on::before { transform: scaleY(1); }
+.ck-card:hover { border-color: #555; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.7); }
+.ck-card.on { border-color: #bbb; }
+.ck-card.final { border-color: #3a2020; }
+
+.ck-num { position: absolute; top: 12px; right: 14px; font-family: 'DM Mono', monospace; font-size: 0.68rem; color: #333; z-index: 1; transition: color .28s; }
+.ck-card.on .ck-num { color: #bbb; }
+
+.ck-chk { position: absolute; top: 12px; left: 14px; width: 24px; height: 24px; border: 2px solid #333; border-radius: 50%; z-index: 1; display: flex; align-items: center; justify-content: center; transition: border-color .28s, background .28s; }
+.ck-chk svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 2.5; fill: none; opacity: 0; transition: opacity .2s; }
+.ck-card.on .ck-chk { background: var(--accent); border-color: var(--accent); }
+.ck-card.on .ck-chk svg { opacity: 1; }
+
+.ck-body { position: relative; z-index: 1; padding: 44px 16px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.ck-subtitle { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; color: #fff; transition: color .28s; line-height: 1.3; }
+.ck-card.on .ck-subtitle { color: #000; }
+.ck-card.final .ck-subtitle { color: var(--accent); }
+.ck-divider { width: 28px; height: 2px; background: var(--accent); transition: background .28s; flex-shrink: 0; }
+.ck-card.on .ck-divider { background: #ccc; }
+.ck-content { font-size: 0.82rem; color: #999; line-height: 1.8; transition: color .28s; word-break: keep-all; }
+.ck-card.on .ck-content { color: #444; }
+
+.ck-footer { text-align: center; padding: 8px 36px 0; }
+.ck-reset-btn { background: none; border: 1px solid #333; color: #555; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; padding: 10px 32px; cursor: pointer; transition: border-color .2s, color .2s; }
+.ck-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══════════════ TAB3 녹음 ══════════════ */
+#tab3 { background: #f8f8f8; min-height: 80vh; padding: 36px; }
+.rec-container { max-width: 820px; margin: 0 auto; }
+.rec-title { font-size: 1.15rem; font-weight: 900; color: var(--black); margin-bottom: 8px; }
+.rec-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 28px; line-height: 1.8; word-break: keep-all; }
+
+.rec-status-box { background: #fff; border: 1.5px solid var(--border); padding: 18px 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+.rec-dot { width: 14px; height: 14px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background .3s; }
+.rec-dot.listening { background: var(--accent); animation: blink 1s infinite; }
+.rec-dot.done { background: #27ae60; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.rec-status-text { font-size: 0.88rem; font-weight: 700; color: var(--black); }
+.rec-timer { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 1.1rem; color: var(--accent); font-weight: 700; }
+
+.rec-btn-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.rec-btn { display: flex; align-items: center; gap: 10px; padding: 15px 24px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .2s; }
+.rec-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.rec-btn-start { background: var(--accent); color: #fff; border-color: var(--accent); }
+.rec-btn-start:hover:not(:disabled) { background: #a93226; }
+.rec-btn-start:disabled { background: #ccc; border-color: #ccc; cursor: not-allowed; }
+.rec-btn-stop  { background: #fff; color: var(--black); border-color: #ccc; }
+.rec-btn-stop:hover:not(:disabled)  { border-color: var(--accent); color: var(--accent); }
+.rec-btn-stop:disabled  { color: #ccc; border-color: #e0e0e0; cursor: not-allowed; }
+.rec-btn-copy  { background: #fff; color: var(--black); border-color: #ccc; }
+.rec-btn-copy:hover  { border-color: #27ae60; color: #27ae60; }
+.rec-btn-clear { background: #fff; color: #999; border-color: #e0e0e0; }
+.rec-btn-clear:hover { border-color: #bbb; color: var(--black); }
+
+.rec-live-box { background: #fff8f8; border: 1.5px solid #fdd; padding: 16px 18px; margin-bottom: 14px; min-height: 52px; font-size: 0.88rem; color: #c0392b; font-style: italic; line-height: 1.8; word-break: keep-all; display: none; }
+.rec-live-box.show { display: block; }
+
+.rec-output { background: #fff; border: 1.5px solid var(--border); padding: 20px; min-height: 260px; font-size: 0.9rem; color: var(--black); line-height: 1.9; word-break: keep-all; outline: none; resize: vertical; width: 100%; font-family: 'Noto Sans KR', sans-serif; }
+.rec-output:focus { border-color: #bbb; }
+
+.rec-unsupported { background: #fff3f3; border: 1.5px solid #fcc; padding: 18px 22px; font-size: 0.85rem; color: #c0392b; line-height: 1.8; margin-bottom: 20px; display: none; }
+
+.rec-hint { margin-top: 14px; font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.5px; line-height: 2; }
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .qa-grid, .ck-grid { grid-template-columns: repeat(2, 1fr); padding: 0 20px 8px; gap: 10px; }
+  .stage-bar { margin: 20px 20px 10px; }
+  .ck-grid { padding: 16px 20px; }
+  .tab-btn { padding: 12px 14px; font-size: 0.8rem; }
+  #tab3 { padding: 20px 16px; }
+  .prog-wrap, .ck-prog-wrap { padding: 10px 20px; }
+}
+@media (max-width: 560px) {
+  .qa-grid, .ck-grid { grid-template-columns: 1fr; }
+  .site-header { padding: 14px 18px; }
+  .tab-nav { padding: 0 8px; }
+  html { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-icon">🚒</div>
+  <div class="site-title">
+    <h1>현장지휘관 훈련 포털</h1>
+    <p>권유진 · 인천소방학교 · FIELD COMMANDER TRAINING PORTAL · 2025</p>
+  </div>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(1,this)">📋 현장지휘관 질문리스트</button>
+  <button class="tab-btn"        onclick="switchTab(2,this)">✅ 현장지휘관 체크리스트</button>
+  <button class="tab-btn"        onclick="switchTab(3,this)">🎙 개인 훈련(녹음)</button>
+</nav>
+
+<!-- ═══════════════════════════════════
+     TAB 1 — 질문리스트
+═══════════════════════════════════ -->
+<div id="tab1" class="tab-panel active">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="qa-fill"></div></div>
+    <div class="prog-label">열람 <span id="qa-count">0</span> / 18</div>
+  </div>
+
+  <div class="stage-bar"><span>출동 전·중 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q1</span><span class="q-text">출동 중 정보수집은 왜 해야하나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">현장 도착 전 사고상황을 미리 파악하여 신속한 초기 의사결정을 가능하게 하기 때문입니다.</div>
+        <ul class="a-ul">
+          <li>출동지령 단계: 재난유형·규모·인명피해 정보 파악</li>
+          <li>출동 중: 신고자 추가정보(무선·유선), 날씨·시간대, 119현장지원시스템 활용</li>
+          <li>현장도착 단계: 건물 배치·사고 진행상황·활동 필요사항 확인</li>
+          <li>도착 후: 소방활동조사서·관계자 진술·대원 정찰보고 활용</li>
+          <li>출동 중 불필요한 무선교신을 삼가야 상황실의 추가정보 전파를 놓치지 않음</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q2</span><span class="q-text">지휘권 선언은 왜 해야하나요? 안하면 어떻게 될까요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">모든 사고현장에 반드시 1명의 현장지휘관이 존재함을 공식화하는 행위로, 초기 현장지휘체계의 확립과 혼선 방지를 위해 필수입니다.</div>
+        <ul class="a-ul">
+          <li>지휘권 선언 = 선착대장이 초기 무선보고를 실시하는 것</li>
+          <li>미선언 시: 후착대가 임의로 독자적 활동 → 중복배치·혼선 발생</li>
+          <li>후착 상급간부가 현 지휘관 지휘에 개입 가능</li>
+          <li>지휘권 공백은 인명·재산 피해 확대의 직접적 원인이 됨</li>
+          <li>지휘권을 선언하지 않은 상위지휘관은 하위지휘관 지휘에 개입 불가</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>초기 현장지휘 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q3</span><span class="q-text">초기상황보고는 왜 해야하며, 반드시 포함해야 할 내용은?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">지휘권을 공식 선언하고, 상황실 및 후착대에게 현장상황을 전파하여 체계적인 대응활동을 시작하기 위해 반드시 실시해야 합니다.</div>
+        <ul class="a-ul">
+          <li>① 현장에 도착한 출동대 명칭</li><li>② 간단한 사고상황 (사고유형·건물 개요 등)</li>
+          <li>③ 현재 사고상황 (연소확대 중·대량 환자발생 등)</li><li>④ 시도 중인 현장활동</li>
+          <li>⑤ 전략 선언 (공격전략 또는 방어전략)</li><li>⑥ 대원 안전과 직결되는 사항</li>
+          <li>⑦ 지휘권 장악·지휘관 신원·지휘소 위치</li><li>⑧ 필요한 자원 요청</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q4</span><span class="q-text">지휘형태는 무엇이 있으며, 어떤 지휘형태를 취해야 하나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">지휘형태는 4가지로 구분되며, 고정지휘를 최우선으로 고려해야 합니다.</div>
+        <ul class="a-ul">
+          <li>① 조사형태: 사고징후 없어 신고지역을 돌아보며 확인</li>
+          <li>② 임무병행지휘(전진지휘): 대원 지원과 지휘 병행. 3~4분 내 미해결 시 고정지휘 전환</li>
+          <li>③ 고정지휘: 건물 외부 고정위치에서 지휘 전담. 선착대장·전문지휘관 모두 우선 선택</li>
+          <li>④ 이동지휘: 이동하면서 지휘. 전문지휘관은 반드시 지양</li>
+          <li>핵심원칙: 사고규모가 크거나 복잡·확대 가능성 있으면 초기부터 고정지휘</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q5</span><span class="q-text">공격·방어전략 선정 기준과 방어전략 전환 상황은?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">구조대상자 유무와 대원 위험도를 최우선 기준으로 하며, 상황 변화에 따라 즉시 방어전략으로 전환해야 합니다.</div>
+        <ul class="a-ul">
+          <li>공격전략: 구조 가능한 요구조자 있음, 건물 내 진입·체류 가능, 화재범위 통제 가능</li>
+          <li>방어전략: 건물 전체 화재 진행, 붕괴우려, 요구조자 생존가능성 희박</li>
+          <li>방어전략 전환: 연소확대 저지 실패, 건물붕괴 징후, 화재상황 급변, 급수제약, 대원 위험</li>
+          <li>대원 위험도 기준 ①구조가능 요구조자→상당한 위험 감수 ②재산보호→약간의 위험</li>
+          <li>공격·방어전략 동시 적용 절대 금지</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q6</span><span class="q-text">방면설정은 왜 하며, 어떤 기준으로 방면을 구분하나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">각 방향별 책임구역을 명확히 하여 자원을 체계적으로 배치하고 지휘통제를 효율화하기 위해 실시합니다.</div>
+        <ul class="a-ul">
+          <li>목적: 넓은 화재현장에서 구역별 책임 명확화, 소방력 중복배치 방지</li>
+          <li>구분 기준: 건물 전면·후면·좌측·우측을 A~D방면으로 구분</li>
+          <li>방면별 단위지휘관(분대장) 지정으로 현장지휘관의 통솔범위 최적화</li>
+          <li>방면 설정 시 연소확대 방향과 인접건물 위험도를 우선 고려</li>
+          <li>방면별 소방용수 공급시스템과 통신채널을 별도 운용</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>자원 관리 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q7</span><span class="q-text">대기단계 운영은 왜 해야하나요? 어떤 효과가 있나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">현장지휘관이 계획적으로 소방력을 배치하고 혼선 없는 현장 운영을 위해 반드시 실시해야 합니다.</div>
+        <ul class="a-ul">
+          <li>효과 ①: 현장의 과도한 차량 밀집 방지</li>
+          <li>효과 ②: 상황평가 후 출동대 배치할 시간적 여유 제공</li>
+          <li>효과 ③: 현장 인근 위치로 효과적인 임무부여 가능</li>
+          <li>효과 ④: 중요한 사고 초기단계에 무선 교신량 감소</li>
+          <li>효과 ⑤: 현장투입 출동대의 활동위치 추적관리 용이</li>
+          <li>효과 ⑥: 혼란과 압박 없이 작전계획 수립 및 실행 가능</li>
+          <li>대기1단계: 현장 100m 이격 / 대기2단계: 30분 이상 지속 시 자원대기소 지정</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q8</span><span class="q-text">1선펌프차와 중요물탱크는 왜 지정해야 하며, 기준은?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">현장에서 수관 꼬임·혼선을 방지하고 안정적인 소방용수 공급을 위해 필수적으로 시행합니다.</div>
+        <ul class="a-ul">
+          <li>1선펌프차: 수관을 연결하여 사용하는 펌프차를 명확히 지정해야 수관 혼선 방지</li>
+          <li>지정 기준: 통상 선착대 펌프차량이 1선. 관창 추가 시 방면별로 추가 지정</li>
+          <li>지정된 1선펌프차 외 펌프차에서는 가급적 수관 미전개</li>
+          <li>중요물탱크: 1선펌프차 1대당 물탱크차 3대를 순환 배정 (급수→보수→대기)</li>
+          <li>소화전 우선 점령, 없을 경우 물탱크차 순환급수 시스템 구성</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q12</span><span class="q-text">3단계 소방력 배치모델(The 3 Deep)은 무엇인가요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">돌발상황 발생 시에도 즉각 대처할 수 있도록 소방력을 3단계로 구분하여 운영하는 체계입니다.</div>
+        <ul class="a-ul">
+          <li>1단계(위험지역 활동): 대응활동이 필요한 HOT ZONE에 우선 배치</li>
+          <li>2단계(직전대기): 위험지역 바로 바깥에서 즉시 투입 대기 (교대조·긴급대응팀)</li>
+          <li>3단계(예비소방력): 자원대기소에서 교대·예비 소방력으로 대기</li>
+          <li>고층건물 화재 시 자원대기소: 발화층의 2개층 아래층에 설치</li>
+          <li>먼저 1단계 배치 완료 → 2단계 직전대기 → 나머지 3단계로 운영</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>전술 및 작전 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q13</span><span class="q-text">전술 우선순위(RECEO)는 무엇인가요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">복잡한 사고상황에서 임무 배분의 기준이 되는 RECEO 순서입니다.</div>
+        <ul class="a-ul">
+          <li>R (Rescue): 인명구조 및 구급 — 모든 작전의 1순위</li>
+          <li>E (Exposure): 외부 연소확대 방지 — 인접건물·차량·시설물로의 확산 차단</li>
+          <li>C (Contain): 내부 연소확대 방지 — 건물 내 다른 구획으로의 확대 저지</li>
+          <li>E (Extinguish): 화재진압 — 화점 직접 진압</li>
+          <li>O (Overhaul): 종합점검·조사 — 잔화정리·환경오염 조치·원인조사</li>
+          <li>공격전략: 인명구조→화재진압→재산보호 / 방어전략: 위험지역→저지선→인명검색→확대방지</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q10</span><span class="q-text">RECEO에 따른 임무 배분과 인명구조 세부 우선순위는?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">RECEO 순서에 따라 자원을 순차적으로 배치하며, 인명구조 내에서도 세부 우선순위가 있습니다.</div>
+        <ul class="a-ul">
+          <li>인명구조 세부: ①가장 심각하게 위협받는 곳 ②가장 많은 수가 있는 곳 ③발화지역 잔류자 ④노출지역 잔류자</li>
+          <li>고층건물 화재: 화재 진행 중인 층의 상층 구조대상자 우선</li>
+          <li>장애인·노인 등 구조약자에 대한 배려 별도 고려</li>
+          <li>완전히 화재로 뒤덮인 지역 희생자는 1분 내 사망 → 무리한 진입 금지</li>
+          <li>소방대원의 생명 > 어떤 재산</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q14</span><span class="q-text">신속동료구조팀(RIT)은 필수로 지정해야 하나요? 임무는?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">RIT는 위험지역에서 활동하는 대원의 비상탈출 지원을 위해 반드시 지정해야 하는 안전장치입니다.</div>
+        <ul class="a-ul">
+          <li>지정 필수: HOT ZONE 내에 대원이 활동하는 모든 현장에서 지정</li>
+          <li>임무 ①: 긴급탈출(MAYDAY) 상황 발생 시 즉시 투입</li>
+          <li>임무 ②: 고립·부상 대원 구조 및 탈출 지원</li>
+          <li>임무 ③: 건물구조·진출입 통로·내부활동 대원 현황을 상시 파악</li>
+          <li>임무 ④: 현장지휘관의 지시에 따라 즉시 투입 가능한 준비 유지</li>
+          <li>RIT는 3단계 배치모델의 직전대기(2단계)로 운영되기도 함</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q15</span><span class="q-text">출동대는 꼭 현장지휘관의 임무를 받고 활동해야 하는 이유는?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">지휘통일 원칙에 따라 모든 출동대는 반드시 현장지휘관의 임무지시 후 활동을 시작해야 합니다.</div>
+        <ul class="a-ul">
+          <li>이유 ①: 출동대 중복배치 방지 — 임의 진입 시 필요한 곳 소방력 배치 지연</li>
+          <li>이유 ②: 차량 혼잡 방지 — 무계획적 부서로 중요차량 접근 불가 발생</li>
+          <li>이유 ③: 무선교신 혼선 방지 — 대기절차 준수로 초기 교신량 감소</li>
+          <li>이유 ④: 대원 안전 확보 — 임의 활동 출동대는 다른 모든 출동대를 위험하게 만듦</li>
+          <li>이유 ⑤: 체계적 소방력 운용 — 현장지휘관이 계획적 배치 구상 및 실현 가능</li>
+          <li>임무부여 내용: 목표·위치·수행임무·단위지휘관 명시</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>통신·안전 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q11</span><span class="q-text">현장에서 통신을 잘하기 위한 요령은 무엇인가요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">간결하고 명확한 교신을 원칙으로 합니다. 현장지휘관은 무전교신 시작·유지·통제의 유일한 책임자입니다.</div>
+        <ul class="a-ul">
+          <li>기본 원칙: 짧고 명확하고 간결하게 / 산만한 형식주의 회피</li>
+          <li>우선순위: 중요한 사항부터 먼저 교신</li>
+          <li>임무 중심: '어떻게'보다 '무엇을' 할 것인가에 집중</li>
+          <li>임무 복창: 수신 후 내용을 간단히 복창하여 확인</li>
+          <li>무선 최소화: 대면 가능 시 대면 의사소통 우선</li>
+          <li>대규모 사고 시 지휘망·작전망·지원망으로 채널 분리 운용</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q17</span><span class="q-text">현장안전담당의 역할과 지정 시점은?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">모든 대원의 안전을 전담 모니터링하고 위험요인을 사전에 차단하는 핵심 안전 기능입니다.</div>
+        <ul class="a-ul">
+          <li>지정 시점: 현장의 복잡성·위험도에 따라 현장지휘관이 판단하여 조기 지정</li>
+          <li>역할 ①: 사고 상황 모니터링 및 대원 안전 보장 수단 개발</li>
+          <li>역할 ②: 위험요인 분석 및 안전대책 수립·이행 조언</li>
+          <li>역할 ③: 현장지휘관에게 안전 관련 독립적 조언권 행사</li>
+          <li>역할 ④: 운영부서와 함께 활동하며 대원 안전 확보</li>
+          <li>구역별 안전담당: 분대별 별도 지정 가능. 미지정 시 분대장이 담당</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>디브리핑 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q9</span><span class="q-text">디브리핑은 왜 중요하며, 효과적인 6단계 프로세스는?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">현장활동의 문제점을 발견하고 개선하여 향후 교훈으로 삼는 핵심 학습 과정입니다. 누가 했는지보다 무엇을 했는지에 집중해야 합니다.</div>
+        <ul class="a-ul">
+          <li>1단계: 우리의 목표는 무엇이었나? — 목표 확인</li>
+          <li>2단계: 실제 어떻게 수행했고, 무슨 일이 발생했나? — 다양한 관점 청취</li>
+          <li>3단계: 왜 발생했는가? — 원인·결과 분석, 해결책 도출</li>
+          <li>4단계: 다음부터는 무엇을 어떻게 개선해야 하나? — 실현 가능한 개선점 집중</li>
+          <li>5단계: 즉시 공유할 교훈은? — 성공사례·도전과제·극복방법 공유</li>
+          <li>6단계: 어떤 후속조치가 필요한가? — SOP·교육훈련 반영사항 구체화</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="stage-bar"><span>지휘권 이양 및 작전 수정 단계</span><div class="stage-bar-line"></div></div>
+  <div class="qa-grid">
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q16</span><span class="q-text">지휘권 이양은 언제, 어떻게 해야 하나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">사고 확대, 상급자 도착, 법령 요구 등의 상황에서 공식 절차에 따라 진행하며, 반드시 지휘권 공백이 없도록 해야 합니다.</div>
+        <ul class="a-ul">
+          <li>이양 시점: ①대형·복합사고로 상급지휘관 필요 ②기존 지휘관 교대 필요 ③기관장 지시 ④법령 요구</li>
+          <li>5단계 절차: ①상황 공동 평가 → ②대면 브리핑 → ③이양 시점 결정 → ④전체 공지 → ⑤종전 지휘관 새 임무 지정</li>
+          <li>브리핑 내용: 사고상황·대응목표 우선순위·작전계획·자원배치·통신계획·잠재위험</li>
+          <li>원칙 ①: 가능한 대면방식으로 이양</li>
+          <li>원칙 ②: 지휘체계 연속성 유지 (지휘권 공백 절대 금지)</li>
+          <li>원칙 ③: 이양 시점은 모든 구성원에게 반드시 전달</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="qa-card" onclick="qaToggle(this)">
+      <div class="qa-card-q"><span class="q-num">Q18</span><span class="q-text">작전계획은 어떤 상황에서 수정해야 하나요?</span><span class="q-arr">▼</span></div>
+      <div class="qa-card-a"><div class="qa-card-a-inner">
+        <div class="a-sum">수시로 현장 상황변화와 활동결과를 평가하여 작전계획의 적정성을 확인하고 필요 시 즉각 수정해야 합니다.</div>
+        <ul class="a-ul">
+          <li>수정 판단기준: 주요요소 현행화·대원 안전·전략·전술 우선순위 적합성 확인</li>
+          <li>전체양호: 현재 작전계획 지속 추진, 상황변화 관찰</li>
+          <li>소수수정 필요: 현 상황에 맞게 활동 조정</li>
+          <li>중요수정 필요: 작전계획 중요요소 변경·추가, 추가자원 투입 고려</li>
+          <li>계획변경 필요: 작전계획 전면 재검토, 새로운 조직 설립</li>
+          <li>방어전략 전환: 연소확대 저지 실패·붕괴 징후·화재급변·급수 제약·대원 위험</li>
+          <li>평가 근거: 현장지휘관의 육안관찰 + 단위지휘관(분대장)의 진행경과 보고</li>
+        </ul>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="qa-footer"><button class="qa-reset-btn" onclick="qaResetAll()">↺ &nbsp;전체 닫기</button></div>
+</div><!-- /tab1 -->
+
+<!-- ═══════════════════════════════════
+     TAB 2 — 체크리스트
+═══════════════════════════════════ -->
+<div id="tab2" class="tab-panel">
+  <div class="ck-prog-wrap">
+    <div class="ck-prog-bg"><div class="ck-prog-fill" id="ck-fill"></div></div>
+    <div class="ck-prog-label">완료 <span id="ck-count">0</span> / 12</div>
+  </div>
+  <div class="ck-grid">
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">01</div><div class="ck-body"><div class="ck-subtitle">출동보고</div><div class="ck-divider"></div><div class="ck-content">진압1대 차량2대 인원7명 출동중</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">02</div><div class="ck-body"><div class="ck-subtitle">출동중 정보수집</div><div class="ck-divider"></div><div class="ck-content">화재 대상물 정보카드 송신바람</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">03</div><div class="ck-body"><div class="ck-subtitle">정보전파</div><div class="ck-divider"></div><div class="ck-content">출동 중 도로 협소 — 후착대 우회바람<br>검은연기 사일 등</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">04</div><div class="ck-body"><div class="ck-subtitle">도착보고 / 지휘권선언</div><div class="ck-divider"></div><div class="ck-content">현장도착 / 현시간 현장지휘</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">05</div><div class="ck-body"><div class="ck-subtitle">초기상황보고</div><div class="ck-divider"></div><div class="ck-content">10층건물 5층에서 화재발생<br>독점불가</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">06</div><div class="ck-body"><div class="ck-subtitle">차량배치</div><div class="ck-divider"></div><div class="ck-content">1선 펌프차·물탱크 지정<br>특수차 배치장소 확보<br>대기 1단계 운영</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">07</div><div class="ck-body"><div class="ck-subtitle">방면설정</div><div class="ck-divider"></div><div class="ck-content">주출입구 A방면 지정<br>시계방향 B·C·D방면 지정</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">08</div><div class="ck-body"><div class="ck-subtitle">지휘형태 / 전략</div><div class="ck-divider"></div><div class="ck-content">A방면 고정지휘<br>공격 — 방어전략</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">09</div><div class="ck-body"><div class="ck-subtitle">임무지정</div><div class="ck-divider"></div><div class="ck-content">화재진압 · 인명구조 · RIT<br>드론 · 임시의료소 · 통제선</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">10</div><div class="ck-body"><div class="ck-subtitle">추가출동대 요청</div><div class="ck-divider"></div><div class="ck-content">특수차 · 조연차 · 펌프<br>탱크 · 구조 · 구급 등</div></div></div>
+    <div class="ck-card" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">11</div><div class="ck-body"><div class="ck-subtitle">유관기관 요청</div><div class="ck-divider"></div><div class="ck-content">구청 · 경찰 · 가스 · 한전<br>수도 · 보건소 · DMAT 등</div></div></div>
+    <div class="ck-card final" onclick="ckToggle(this)"><div class="ck-chk"><svg viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1"/></svg></div><div class="ck-num">12</div><div class="ck-body"><div class="ck-subtitle">초진 / 완진 / 지휘권이양</div><div class="ck-divider"></div><div class="ck-content">현장 종료 단계<br>지휘권 이양 및 철수</div></div></div>
+  </div>
+  <div class="ck-footer" style="margin-top:8px;"><button class="ck-reset-btn" onclick="ckResetAll()">↺ &nbsp;전체 초기화</button></div>
+</div><!-- /tab2 -->
+
+<!-- ═══════════════════════════════════
+     TAB 3 — 개인 훈련(녹음)
+═══════════════════════════════════ -->
+<div id="tab3" class="tab-panel">
+  <div class="rec-container">
+    <div class="rec-title">🎙 개인 훈련 — 음성 녹음 &amp; 텍스트 변환</div>
+    <div class="rec-desc">
+      마이크 버튼을 누르고 소리 내어 답변을 말해보세요. 말이 끝나면 자동으로 텍스트로 변환됩니다.<br>
+      훈련 내용을 복사하거나 저장할 수 있습니다.<br>
+      <strong>※ Google Chrome(크롬) 브라우저에서 가장 잘 작동합니다.</strong>
+    </div>
+
+    <div class="rec-unsupported" id="rec-unsupported">
+      ⚠️ 현재 브라우저는 음성인식을 지원하지 않습니다.<br>
+      <strong>Google Chrome</strong> 브라우저를 사용해 주세요. →
+      <a href="https://www.google.com/chrome/" target="_blank" style="color:var(--accent)">다운로드</a>
+    </div>
+
+    <div class="rec-status-box">
+      <div class="rec-dot" id="rec-dot"></div>
+      <div class="rec-status-text" id="rec-status">대기 중 — 녹음 시작 버튼을 눌러주세요</div>
+      <div class="rec-timer" id="rec-timer">00:00</div>
+    </div>
+
+    <div class="rec-btn-row">
+      <button class="rec-btn rec-btn-start" id="btn-start" onclick="startRec()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        🔴 녹음 시작
+      </button>
+      <button class="rec-btn rec-btn-stop" id="btn-stop" onclick="stopRec()" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+        ⏹ 녹음 중지
+      </button>
+      <button class="rec-btn rec-btn-copy" onclick="copyText()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        📋 텍스트 복사
+      </button>
+      <button class="rec-btn rec-btn-clear" onclick="clearText()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        🗑 전체 삭제
+      </button>
+    </div>
+
+    <div class="rec-live-box" id="rec-live"></div>
+    <textarea class="rec-output" id="rec-output" placeholder="여기에 변환된 텍스트가 표시됩니다.&#10;&#10;녹음 시작 후 말씀하시면 자동으로 텍스트로 변환됩니다.&#10;변환된 내용을 직접 수정하실 수도 있습니다." spellcheck="false"></textarea>
+
+    <div class="rec-hint">
+      💡 TIP: 말 사이에 잠깐 멈추면 단락이 자연스럽게 나뉩니다.<br>
+      💡 TIP: 처음 실행 시 브라우저에서 마이크 사용 허용을 눌러주세요.<br>
+      💡 TIP: 변환된 텍스트는 복사 후 메모장·이메일에 붙여넣기 가능합니다.
+    </div>
+  </div>
+</div><!-- /tab3 -->
+
+<script>
+/* ── 탭 전환 ── */
+function switchTab(n, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab' + n).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── TAB1 QA ── */
+const qaSet = new Set();
+function qaToggle(card) {
+  const all = Array.from(document.querySelectorAll('.qa-card'));
+  const i = all.indexOf(card);
+  card.classList.contains('open') ? (card.classList.remove('open'), qaSet.delete(i)) : (card.classList.add('open'), qaSet.add(i));
+  document.getElementById('qa-count').textContent = qaSet.size;
+  document.getElementById('qa-fill').style.width = (qaSet.size / 18 * 100) + '%';
+}
+function qaResetAll() {
+  document.querySelectorAll('.qa-card.open').forEach(c => c.classList.remove('open'));
+  qaSet.clear();
+  document.getElementById('qa-count').textContent = '0';
+  document.getElementById('qa-fill').style.width = '0%';
+}
+
+/* ── TAB2 체크리스트 ── */
+function ckToggle(card) {
+  card.classList.toggle('on');
+  const c = document.querySelectorAll('#tab2 .ck-card.on').length;
+  document.getElementById('ck-count').textContent = c;
+  document.getElementById('ck-fill').style.width = (c / 12 * 100) + '%';
+}
+function ckResetAll() {
+  document.querySelectorAll('#tab2 .ck-card.on').forEach(c => c.classList.remove('on'));
+  document.getElementById('ck-count').textContent = '0';
+  document.getElementById('ck-fill').style.width = '0%';
+}
+
+/* ── TAB3 음성인식 ── */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, timerInt = null, secs = 0, finalText = '';
+
+if (!SR) {
+  document.getElementById('rec-unsupported').style.display = 'block';
+  document.getElementById('btn-start').disabled = true;
+} else {
+  rec = new SR();
+  rec.lang = 'ko-KR';
+  rec.continuous = true;
+  rec.interimResults = true;
+
+  rec.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      e.results[i].isFinal ? (finalText += e.results[i][0].transcript + '\n', document.getElementById('rec-output').value = finalText)
+                           : (interim += e.results[i][0].transcript);
+    }
+    const lb = document.getElementById('rec-live');
+    interim ? (lb.textContent = '🎙 ' + interim, lb.classList.add('show')) : lb.classList.remove('show');
+  };
+
+  rec.onerror = e => {
+    const m = { 'not-allowed':'마이크 사용이 차단되었습니다. 브라우저 설정에서 마이크를 허용해 주세요.', 'no-speech':'음성이 감지되지 않았습니다. 마이크에 가까이 말해주세요.', 'network':'네트워크 오류가 발생했습니다.' };
+    setStatus(m[e.error] || '오류: ' + e.error);
+    stopRec();
+  };
+
+  rec.onend = () => { if (!document.getElementById('btn-stop').disabled) rec.start(); };
+}
+
+function startRec() {
+  if (!SR) return;
+  finalText = document.getElementById('rec-output').value;
+  rec.start();
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-stop').disabled = false;
+  setStatus('🔴 녹음 중 — 말씀해 주세요');
+  document.getElementById('rec-dot').className = 'rec-dot listening';
+  secs = 0;
+  timerInt = setInterval(() => {
+    secs++;
+    document.getElementById('rec-timer').textContent =
+      String(Math.floor(secs/60)).padStart(2,'0') + ':' + String(secs%60).padStart(2,'0');
+  }, 1000);
+}
+
+function stopRec() {
+  if (rec) { rec.onend = null; rec.stop(); }
+  document.getElementById('btn-start').disabled = false;
+  document.getElementById('btn-stop').disabled = true;
+  clearInterval(timerInt);
+  setStatus('✅ 녹음 완료 — 텍스트를 확인·수정하세요');
+  document.getElementById('rec-dot').className = 'rec-dot done';
+  document.getElementById('rec-live').classList.remove('show');
+  if (rec) rec.onend = () => {};
+}
+
+function setStatus(msg) { document.getElementById('rec-status').textContent = msg; }
+
+function copyText() {
+  const t = document.getElementById('rec-output').value;
+  if (!t.trim()) { alert('복사할 텍스트가 없습니다.'); return; }
+  navigator.clipboard.writeText(t).then(() => alert('텍스트가 클립보드에 복사되었습니다! 메모장 등에 붙여넣기 하세요.')).catch(() => {
+    document.getElementById('rec-output').select();
+    document.execCommand('copy');
+    alert('텍스트가 복사되었습니다!');
+  });
+}
+
+function clearText() {
+  if (!confirm('모든 텍스트를 삭제할까요?')) return;
+  document.getElementById('rec-output').value = '';
+  finalText = '';
+  document.getElementById('rec-timer').textContent = '00:00';
+  setStatus('대기 중 — 녹음 시작 버튼을 눌러주세요');
+  document.getElementById('rec-dot').className = 'rec-dot';
+}
+</script>
+</body>
+</html>
