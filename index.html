@@ -207,7 +207,7 @@ body {
   gap: 8px;
   padding: 8px 12px;
   flex: 1;
-  overflow: hidden;
+  overflow: hidden; /* tablet/PC: viewport-fit */
 }
 
 .ck-card {
@@ -216,7 +216,6 @@ body {
   cursor: pointer;
   user-select: none;
   position: relative;
-  overflow: hidden;
   transition: border-color .25s, box-shadow .25s, background .28s;
   display: flex;
   flex-direction: column;
@@ -269,9 +268,33 @@ body {
   .prog-wrap, .ck-prog-wrap { padding: 10px 16px; }
   .qa-footer, .ck-footer { padding: 0 16px; }
 }
-@media (max-width: 560px) {
+@media (max-width: 600px) {
   .qa-grid { grid-template-columns: 1fr; }
-  .ck-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* 스마트폰: 체크리스트 스크롤 모드 */
+  #tab2.active-flex { overflow-y: auto !important; }
+  .ck-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto !important;     /* 행 높이 자동 */
+    overflow: visible !important;
+    flex: none !important;
+    height: auto !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+  .ck-card {
+    min-height: 100px !important;            /* 일관된 최소 높이 */
+    overflow: visible !important;
+  }
+  .ck-body {
+    padding: 30px 8px 10px !important;
+    gap: 5px !important;
+  }
+  .ck-subtitle { font-size: 0.78rem !important; }
+  .ck-content  { font-size: 0.66rem !important; line-height: 1.55 !important; }
+  .ck-footer   { padding-bottom: 16px !important; }
+
+  /* 헤더 */
   .site-header { padding: 12px 16px; gap: 12px; }
   .site-icon { width: 60px; height: 60px; }
   .site-icon img { width: 58px; height: 58px; }
@@ -279,7 +302,6 @@ body {
   .clock-time { font-size: 0.88rem; }
   .clock-date { display: none; }
   html { font-size: 16px; }
-  .rec-open-btn { font-size: 0.95rem; padding: 22px 16px; }
 }
 
 /* ── 갤럭시탭 (600-1024px) 최적화 ── */
@@ -288,7 +310,7 @@ body {
   .site-title h1 { font-size: 1.3rem; }
   .tab-btn { font-size: 0.95rem; padding: 28px 8px; }
   .qa-grid { grid-template-columns: repeat(2, 1fr); padding: 0 20px 8px; }
-  .ck-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); }
+  .ck-grid { grid-template-columns: repeat(3, 1fr) !important; grid-template-rows: repeat(4, 1fr) !important; overflow: hidden !important; flex: 1 !important; }
   .ck-subtitle { font-size: 0.78rem; }
   .ck-content { font-size: 0.63rem; }
 }
@@ -298,10 +320,16 @@ body {
   body { max-width: 1280px; margin: 0 auto; }
   .tab-btn { font-size: 1rem; padding: 30px 8px; }
   .qa-grid { grid-template-columns: repeat(3, 1fr); padding: 0 40px 8px; }
-  .ck-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); }
+  .ck-grid { grid-template-columns: repeat(4, 1fr) !important; grid-template-rows: repeat(3, 1fr) !important; overflow: hidden !important; flex: 1 !important; }
 }
 /* ══════════════ TAB3 무전 훈련 ══════════════ */
-#tab3 { background: var(--bg-light); }
+#tab3 {
+  background: var(--bg-light);
+}
+/* Tab3 active 상태: overflow는 rec-main이 담당 */
+#tab3.active-flex {
+  overflow-y: hidden !important;
+}
 
 /* 상단 상태 패널 */
 .rec-status-bar {
@@ -310,6 +338,7 @@ body {
   padding: 10px 20px;
   display: flex; align-items: center; gap: 14px;
   flex-shrink: 0;
+  width: 100%;  /* 전체 너비 보장 */
 }
 .rec-led {
   width: 12px; height: 12px; border-radius: 50%;
@@ -340,7 +369,10 @@ body {
 
 /* 메인 영역 */
 .rec-main {
-  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-height: 0;                        /* flex 자식 높이 계산 핵심 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex; flex-direction: column; gap: 12px;
   padding: 16px 16px 20px;
 }
