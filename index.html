@@ -262,12 +262,18 @@ body {
 .ck-reset-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; padding: 10px 32px; cursor: pointer; transition: border-color .2s, color .2s; }
 .ck-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* ══════════════ TAB3 개인훈련 ══════════════ */
-#tab3 { background: #eef2f8; }
-/* ══ 자가 훈련 모드 ══ */
-#tab3 .train-wrap {
-  max-width: 700px; width: 100%; margin: 0 auto;
-  padding: 20px 16px 40px;
+/* ══════════════ TAB3 준비중 ══════════════ */
+#tab3 { background: var(--bg-light); }
+.tab3-coming-soon {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; min-height: 300px;
+  padding: 60px 20px;
+  text-align: center;
+}
+.tab3-title {
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--navy); letter-spacing: 4px;
 }
 
 /* 상태바 */
@@ -1246,100 +1252,9 @@ body {
      TAB 3 — 개인 훈련(녹음)
 ═══════════════════════════════════ -->
 <div id="tab3" class="tab-panel">
-<div class="train-wrap">
-
-  <!-- 시작 화면 -->
-  <div class="train-start" id="train-start">
-
-    <!-- ① 음성 녹음 앱 연동 -->
-    <div class="rec-section">
-      <div class="rec-section-title">🎙 음성 녹음으로 훈련하기</div>
-      <p class="rec-section-desc">소리 내어 답변을 말하고 녹음하세요.<br>기기에 맞는 앱이 자동 연결됩니다.</p>
-      <div class="rec-btn-group">
-        <a class="rec-device-btn android-btn" id="samsung-btn"
-           href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.voicenote;end">
-          <span class="rec-device-icon">📱</span>
-          <span class="rec-device-text">삼성<br><strong>음성 녹음</strong></span>
-        </a>
-        <a class="rec-device-btn ios-btn" id="ios-btn"
-           href="voice-memos://">
-          <span class="rec-device-icon">🍎</span>
-          <span class="rec-device-text">아이폰<br><strong>음성 메모</strong></span>
-        </a>
-      </div>
-      <div class="rec-device-notice" id="rec-device-notice">기기를 자동으로 감지합니다...</div>
-    </div>
-
-    <div class="train-divider">— 또는 아래 자가 훈련 모드 활용 —</div>
-
-    <!-- ② 자가 훈련 모드 -->
-    <h3>🎯 자가 훈련 — 플래시카드 모드</h3>
-    <p>18개 질문을 카드 형식으로 훈련합니다.<br>
-    질문을 보고 소리 내어 답한 뒤 모범답변과 비교하여<br>
-    스스로 채점하고 취약 항목을 파악하세요.</p>
-    <button class="train-start-btn" onclick="trainStart()">
-      ▶ 자가 훈련 시작
-    </button>
-    <div class="train-mode-info">
-      <strong>⏱ 타이머</strong> 질문당 60초 (실전 압박감 훈련)<br>
-      <strong>✅ 채점</strong> 완벽 / 부분 / 모름 3단계 자가 평가<br>
-      <strong>📊 분석</strong> 훈련 후 취약 항목 자동 분석 제공<br>
-      <strong>🔄 반복</strong> 취약 항목 집중 재훈련 가능
-    </div>
+  <div class="tab3-coming-soon">
+    <div class="tab3-title">준비중</div>
   </div>
-
-  <!-- 훈련 진행 화면 -->
-  <div id="train-main" style="display:none;">
-    <div class="train-status">
-      <span class="train-progress-text" id="train-prog-text">Q 1 / 18</span>
-      <span class="train-score-text" id="train-score-text">완벽 0 · 부분 0 · 모름 0</span>
-    </div>
-    <div class="train-prog-bar"><div class="train-prog-fill" id="train-prog-fill"></div></div>
-
-    <div class="train-timer-wrap">
-      <div class="train-timer" id="train-timer">01:00</div>
-    </div>
-
-    <div class="train-card" id="train-card">
-      <div class="train-q-label" id="train-q-label">Q1</div>
-      <div class="train-q-stage" id="train-q-stage">출동 전·중 단계</div>
-      <div class="train-q-text" id="train-q-text"></div>
-    </div>
-
-    <button class="train-reveal-btn" id="train-reveal-btn" onclick="revealAnswer()">
-      💡 모범 답변 확인
-    </button>
-
-    <div class="train-answer" id="train-answer">
-      <div class="train-answer-title">▌ 모범 답변</div>
-      <div class="train-answer-sum" id="train-answer-sum"></div>
-      <ul class="train-answer-list" id="train-answer-list"></ul>
-    </div>
-
-    <div class="train-rate-wrap" id="train-rate-wrap">
-      <button class="rate-btn perfect" onclick="rate('perfect')">✅<br>완벽하게<br>답했다</button>
-      <button class="rate-btn partial"  onclick="rate('partial')">△<br>일부만<br>답했다</button>
-      <button class="rate-btn miss"     onclick="rate('miss')">❌<br>잘<br>모르겠다</button>
-    </div>
-  </div>
-
-  <!-- 결과 화면 -->
-  <div class="train-result" id="train-result">
-    <div class="result-score" id="result-score">0점</div>
-    <div class="result-label" id="result-label">훈련 완료</div>
-    <div class="result-breakdown">
-      <div class="rb-item p"><div class="rb-num" id="rb-p">0</div><div class="rb-label">✅ 완벽</div></div>
-      <div class="rb-item t"><div class="rb-num" id="rb-t">0</div><div class="rb-label">△ 부분</div></div>
-      <div class="rb-item m"><div class="rb-num" id="rb-m">0</div><div class="rb-label">❌ 모름</div></div>
-    </div>
-    <div class="weak-list" id="weak-list" style="display:none;">
-      <div class="weak-list-title">⚠ 집중 보완 필요 항목</div>
-      <ul id="weak-ul"></ul>
-    </div>
-    <button class="train-restart-btn" onclick="trainRestart()">🔄 다시 훈련하기</button>
-  </div>
-
-</div>
 </div><!-- /tab3 -->
 
 <script>
