@@ -185,7 +185,6 @@ body {
 #tab2 {
   background: var(--bg-light);
   /* 체크리스트: 내부 그리드가 꽉 채움 */
-  display: block;
   overflow: hidden;
 }
 /* tab2/tab3가 active일 때 flex 레이아웃 */
@@ -481,78 +480,6 @@ body {
   pointer-events: none; font-style: italic;
 }
 
-/* 세션 저장 목록 */
-.rec-sessions-panel {
-  background: #fff; border: 1.5px solid var(--border);
-  box-shadow: 0 2px 12px rgba(13,27,62,.08);
-}
-.rec-sessions-header {
-  background: var(--navy2); padding: 8px 14px;
-  display: flex; align-items: center; gap: 10px;
-  border-bottom: 2px solid var(--gold);
-}
-.rec-sessions-title {
-  font-family: 'DM Mono', monospace; font-size: 0.68rem;
-  color: var(--gold); letter-spacing: 2px; font-weight: 700; flex: 1;
-}
-.rec-sessions-count {
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  color: #9fb4d8;
-}
-.rec-sessions-list { padding: 0; }
-.rec-session-empty {
-  padding: 20px 16px; text-align: center;
-  font-size: 0.78rem; color: #bbb; font-style: italic;
-}
-.rec-session-item {
-  border-bottom: 1px solid var(--border);
-  padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.rec-session-item:last-child { border-bottom: none; }
-.rec-session-meta {
-  display: flex; align-items: center; gap: 8px;
-}
-.rec-session-num {
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  color: var(--accent); font-weight: 700; flex-shrink: 0;
-}
-.rec-session-time {
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  color: var(--muted); flex: 1;
-}
-.rec-session-dur {
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  color: var(--navy3);
-}
-.rec-session-preview {
-  font-size: 0.78rem; color: #555; line-height: 1.6;
-  word-break: keep-all; padding: 6px 10px;
-  background: var(--bg-light); border-left: 3px solid var(--navy3);
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.rec-session-preview.empty { color: #bbb; font-style: italic; }
-.rec-session-btns {
-  display: flex; gap: 6px;
-}
-.rec-dl-btn {
-  flex: 1; padding: 7px 6px; border: 1.5px solid var(--navy3);
-  background: #fff; color: var(--navy);
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  cursor: pointer; transition: all .2s; letter-spacing: .5px;
-  text-align: center;
-}
-.rec-dl-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
-.rec-dl-btn.audio { border-color: var(--accent); color: var(--accent); }
-.rec-dl-btn.audio:hover { background: var(--accent); color: #fff; }
-.rec-del-btn {
-  padding: 7px 10px; border: 1.5px solid #e0e0e0;
-  background: #fff; color: #bbb;
-  font-family: 'DM Mono', monospace; font-size: 0.62rem;
-  cursor: pointer; transition: all .2s;
-}
-.rec-del-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* 지원 안내 배너 */
 .rec-compat-banner {
@@ -916,6 +843,60 @@ body {
   margin-top: 4px;
 }
 
+/* 테스트 안내 배너 */
+.rec-test-notice {
+  background: #fff3cd;
+  border: 1.5px solid #ffc107;
+  border-left: 4px solid #e65100;
+  padding: 9px 14px;
+  font-size: 0.78rem;
+  color: #7a4000;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* 저장 버튼 영역 */
+.rec-save-wrap {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--navy);
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(13,27,62,.08);
+}
+.rec-save-wrap.show { display: flex; }
+.rec-save-label {
+  font-size: 0.78rem;
+  color: var(--navy);
+  font-weight: 700;
+}
+.rec-save-btns {
+  display: flex;
+  gap: 10px;
+}
+.rec-save-btn {
+  flex: 1;
+  padding: 13px 10px;
+  border: 2px solid;
+  background: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  letter-spacing: .3px;
+}
+.rec-save-btn.audio { border-color: var(--accent); color: var(--accent); }
+.rec-save-btn.audio:hover { background: var(--accent); color: #fff; }
+.rec-save-btn.text  { border-color: var(--navy);  color: var(--navy);  }
+.rec-save-btn.text:hover  { background: var(--navy);  color: #fff; }
+@media (max-width: 420px) {
+  .rec-save-btns { flex-direction: column; }
+}
+
 </style>
 </head>
 <body>
@@ -935,7 +916,7 @@ body {
   </div>
   <div class="site-title">
     <h1>현장지휘관 훈련 포털</h1>
-    <p>인천소방학교 &nbsp;·&nbsp; 지휘역량강화센터 &nbsp;·&nbsp; 2026</p>
+    <p>인천소방학교 &nbsp;·&nbsp; 지휘역량강화센터 &nbsp;·&nbsp; 2026&nbsp;<span style="color:var(--gold);font-weight:700;">(v26.04.20)</span></p>
   </div>
   <div class="site-clock">
     <div class="clock-time" id="clock-time">00:00:00</div>
@@ -1270,33 +1251,39 @@ body {
      TAB 3 — 무전 훈련
 ═══════════════════════════════════ -->
 <div id="tab3" class="tab-panel">
+
   <!-- 상태 바 -->
   <div class="rec-status-bar">
     <div class="rec-led" id="rec-led"></div>
-    <div class="rec-status-text" id="rec-status-text">대기 중 — 마이크 버튼을 눌러 훈련 시작</div>
+    <div class="rec-status-text" id="rec-status-text">대기 중 — 마이크 버튼을 눌러 시작</div>
     <div class="rec-timer-display" id="rec-timer-display">00:00</div>
     <div class="rec-stt-badge" id="rec-stt-badge">STT 확인중</div>
   </div>
 
-  <!-- 메인 스크롤 영역 -->
+  <!-- 스크롤 영역 -->
   <div class="rec-main">
 
-    <!-- 호환성 배너 -->
-    <div class="rec-compat-banner" id="rec-compat-banner">
-      ⚠️ <strong>음성 인식(STT)을 사용할 수 없는 환경입니다.</strong><br>
-      녹음 기능은 정상 작동합니다. 음성 인식은 크롬(Chrome) 브라우저 또는 삼성 인터넷 앱에서 지원됩니다.
+    <!-- 테스트 안내 -->
+    <div class="rec-test-notice">
+      ⚠️ 테스트 단계로 오류가 있을 수 있습니다.
     </div>
+
+    <!-- STT 미지원 안내 (크롬/삼성인터넷 외) -->
+    <div class="rec-compat-banner" id="rec-compat-banner">
+      📌 <strong>이 환경에서는 음성→텍스트 변환이 지원되지 않습니다.</strong><br>
+      녹음은 정상 작동합니다. 텍스트 변환은 <strong>크롬(Chrome)</strong> 또는 <strong>삼성 인터넷</strong>에서 이용하세요.
+    </div>
+
+    <!-- 오류 메시지 -->
+    <div class="rec-error-msg" id="rec-error-msg"></div>
 
     <!-- 마이크 버튼 -->
     <div class="rec-mic-panel">
-      <div class="rec-error-msg" id="rec-error-msg"></div>
       <button class="rec-mic-btn" id="rec-mic-btn" onclick="toggleRecording()" aria-label="녹음 시작/정지">
-        <!-- 마이크 아이콘 -->
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 1a4 4 0 0 1 4 4v7a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v7a2 2 0 0 0 4 0V5a2 2 0 0 0-2-2zM7 11a1 1 0 0 1 1 1 4 4 0 0 0 8 0 1 1 0 1 1 2 0 6 6 0 0 1-5 5.92V21h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-3.08A6 6 0 0 1 6 12a1 1 0 0 1 1-1z"/>
         </svg>
       </button>
-      <!-- 파형 -->
       <div class="rec-wave" id="rec-wave">
         <div class="rec-wave-bar"></div>
         <div class="rec-wave-bar"></div>
@@ -1310,23 +1297,21 @@ body {
     <!-- 실시간 텍스트 변환 -->
     <div class="rec-transcript-panel">
       <div class="rec-transcript-header">
-        <div class="rec-transcript-title">LIVE TRANSCRIPT</div>
+        <div class="rec-transcript-title">🎙 음성 → 텍스트 변환</div>
         <button class="rec-transcript-clear" onclick="clearTranscript()">초기화</button>
       </div>
       <div class="rec-transcript-body">
-        <div class="rec-transcript-placeholder" id="rec-placeholder">음성을 인식하면 여기에 실시간으로 표시됩니다…</div>
+        <div class="rec-transcript-placeholder" id="rec-placeholder">녹음을 시작하면 음성이 텍스트로 변환되어 여기에 표시됩니다…</div>
         <span class="rec-transcript-text" id="rec-final-text"></span><span class="rec-transcript-interim" id="rec-interim-text"></span>
       </div>
     </div>
 
-    <!-- 저장된 세션 목록 -->
-    <div class="rec-sessions-panel">
-      <div class="rec-sessions-header">
-        <div class="rec-sessions-title">저장된 훈련 기록</div>
-        <div class="rec-sessions-count" id="rec-sessions-count">0건</div>
-      </div>
-      <div class="rec-sessions-list" id="rec-sessions-list">
-        <div class="rec-session-empty">아직 저장된 훈련이 없습니다.</div>
+    <!-- 저장 버튼 (녹음 완료 후 표시) -->
+    <div class="rec-save-wrap" id="rec-save-wrap">
+      <div class="rec-save-label">녹음이 완료되었습니다. 파일을 저장하세요.</div>
+      <div class="rec-save-btns">
+        <button class="rec-save-btn audio" id="rec-dl-audio" onclick="dlLastAudio()">🎙 음성 저장 (.webm)</button>
+        <button class="rec-save-btn text"  id="rec-dl-text"  onclick="dlLastText()">📄 텍스트 저장 (.txt)</button>
       </div>
     </div>
 
@@ -1477,273 +1462,150 @@ setInterval(updateClock, 1000);
    TAB3 — 무전 훈련 (녹음 + STT)
 ════════════════════════════════════ */
 (function() {
-  // ── 브라우저 지원 여부 확인 ──
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const hasMR  = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
-  const hasSTT = !!SR;
+  var SR    = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var hasMR = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  var hasSTT = !!SR;
 
-  // ── 상태 변수 ──
-  let mediaRecorder   = null;
-  let audioChunks     = [];
-  let recognition     = null;
-  let isRecording     = false;
-  let recStartTime    = 0;
-  let recTimerID      = null;
-  let finalText       = '';
-  let sessions        = [];
-  let sessionCounter  = 0;
-  let micStream       = null;
-  let sttRunning      = false;
-  let sttRestartID    = null;
-  let noSpeechCount   = 0;
+  var mediaRecorder = null, audioChunks = [], recognition = null;
+  var isRecording = false, recStartTime = 0, recTimerID = null;
+  var finalText = '', micStream = null;
+  var sttRunning = false, sttRestartID = null;
+  var lastBlob = null, lastText = '';
 
-  // ── DOM 참조 (지연 바인딩) ──
   function el(id) { return document.getElementById(id); }
 
-  // ── 초기화 (DOMContentLoaded 이후) ──
+  // ── 초기화 ──
   window.addEventListener('DOMContentLoaded', function() {
-    // STT 배지 표시
     var badge = el('rec-stt-badge');
-    if (badge) {
-      if (hasSTT) {
-        badge.textContent = '🟢 STT 사용 가능';
-        badge.classList.remove('unavail');
-      } else {
-        badge.textContent = '🔴 STT 미지원';
-        badge.classList.add('unavail');
-        var banner = el('rec-compat-banner');
-        if (banner) banner.classList.add('show');
-      }
+    if (!badge) return;
+    if (hasSTT) {
+      badge.textContent = '🟢 STT 사용 가능';
+      badge.classList.remove('unavail');
+    } else {
+      badge.textContent = '🔴 STT 미지원';
+      badge.classList.add('unavail');
+      var b = el('rec-compat-banner');
+      if (b) b.classList.add('show');
     }
-    // 녹음 불가 환경
     if (!hasMR) {
       var btn = el('rec-mic-btn');
-      if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; }
+      if (btn) { btn.disabled = true; btn.style.opacity = '.4'; }
       var lbl = el('rec-btn-label');
       if (lbl) lbl.textContent = '이 환경에서는 녹음이 지원되지 않습니다';
     }
   });
 
-  // ── STT 인식기 생성 ──
-  function createRecognition() {
+  // ── STT 생성 ──
+  function createSTT() {
     if (!hasSTT) return null;
     var r = new SR();
-    r.lang            = 'ko-KR';
-    r.continuous      = true;
-    r.interimResults  = true;
-    r.maxAlternatives = 1;
-
-    r.onstart = function() { sttRunning = true; noSpeechCount = 0; };
-
+    r.lang = 'ko-KR'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
+    r.onstart  = function() { sttRunning = true; };
     r.onresult = function(e) {
       var interim = '';
       for (var i = e.resultIndex; i < e.results.length; i++) {
         var t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) {
-          finalText += t;
-          // 문장 끝에 공백 추가
-          if (finalText.length && !/[\s]$/.test(finalText)) finalText += ' ';
-        } else {
-          interim += t;
-        }
+        if (e.results[i].isFinal) { finalText += t + ' '; }
+        else { interim += t; }
       }
-      updateTranscriptUI(interim);
+      renderTranscript(interim);
     };
-
     r.onerror = function(e) {
       sttRunning = false;
-      clearTimeout(sttRestartID);
       if (!isRecording) return;
-
-      var silent = ['no-speech', 'audio-capture'];
-      var fatal  = ['not-allowed', 'service-not-allowed'];
-
-      if (fatal.indexOf(e.error) >= 0) {
-        showRecErr('마이크 권한이 필요합니다. 브라우저 설정에서 허용해 주세요.');
-        stopRecording();
-        return;
-      }
-      if (silent.indexOf(e.error) >= 0) {
-        noSpeechCount++;
-        if (noSpeechCount > 8) { noSpeechCount = 0; } // 계속 재시작
-      }
-      // network / aborted / other → 자동 재시작
-      sttRestartID = setTimeout(function() {
-        if (isRecording && !sttRunning) startSTT(r);
-      }, 400);
+      var fatal = ['not-allowed','service-not-allowed'];
+      if (fatal.indexOf(e.error) >= 0) { showErr('마이크 권한을 허용해 주세요.'); stopRecording(); return; }
+      clearTimeout(sttRestartID);
+      sttRestartID = setTimeout(function() { if (isRecording && !sttRunning) safeStartSTT(r); }, 500);
     };
-
     r.onend = function() {
       sttRunning = false;
       if (!isRecording) return;
       clearTimeout(sttRestartID);
-      sttRestartID = setTimeout(function() {
-        if (isRecording && !sttRunning) startSTT(r);
-      }, 300);
+      sttRestartID = setTimeout(function() { if (isRecording && !sttRunning) safeStartSTT(r); }, 300);
     };
-
     return r;
   }
-
-  function startSTT(r) {
+  function safeStartSTT(r) {
     if (!r || sttRunning || !isRecording) return;
-    try { r.start(); }
-    catch(e) { sttRunning = false; }
+    try { r.start(); } catch(e) { sttRunning = false; }
   }
 
   // ── 녹음 토글 ──
-  window.toggleRecording = function() {
-    if (!hasMR) return;
-    if (isRecording) { stopRecording(); }
-    else             { startRecording(); }
-  };
+  window.toggleRecording = function() { if (!hasMR) return; isRecording ? stopRecording() : startRecording(); };
 
   async function startRecording() {
-    hideRecErr();
+    hideErr();
+    hideSave();
     try {
-      // 마이크 권한 요청
-      micStream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000, channelCount: 1 }
-      });
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true, channelCount:1 } });
     } catch(err) {
-      var msg = err.name === 'NotAllowedError'
-        ? '마이크 접근이 거부되었습니다. 브라우저 설정에서 마이크를 허용해 주세요.'
-        : '마이크를 초기화할 수 없습니다 (' + err.message + ')';
-      showRecErr(msg); return;
+      showErr(err.name === 'NotAllowedError' ? '마이크 권한을 허용해 주세요.' : '마이크 오류: ' + err.message);
+      return;
     }
-
-    // MediaRecorder 세팅
-    var mimeType = '';
-    var candidates = ['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/mp4','audio/webm'];
-    for (var i = 0; i < candidates.length; i++) {
-      if (MediaRecorder.isTypeSupported(candidates[i])) { mimeType = candidates[i]; break; }
-    }
-    try {
-      audioChunks  = [];
-      var options  = mimeType ? { mimeType: mimeType } : {};
-      mediaRecorder = new MediaRecorder(micStream, options);
-    } catch(e) {
-      audioChunks   = [];
-      mediaRecorder = new MediaRecorder(micStream);
-    }
+    // MediaRecorder
+    var mime = '', types = ['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/mp4','audio/webm'];
+    for (var i = 0; i < types.length; i++) { if (MediaRecorder.isTypeSupported(types[i])) { mime = types[i]; break; } }
+    audioChunks = [];
+    try { mediaRecorder = new MediaRecorder(micStream, mime ? {mimeType: mime} : {}); }
+    catch(e) { mediaRecorder = new MediaRecorder(micStream); }
     mediaRecorder.ondataavailable = function(e) { if (e.data && e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onerror = function(e) { showRecErr('녹음 중 오류: ' + (e.error || e.message || '')); };
-    mediaRecorder.start(500); // 500ms 단위 청크
-
-    // STT 시작
-    finalText  = '';
-    sttRunning = false;
-    if (hasSTT) {
-      recognition = createRecognition();
-      startSTT(recognition);
-    }
-
+    mediaRecorder.onerror = function(e) { showErr('녹음 오류가 발생했습니다.'); };
+    mediaRecorder.start(500);
+    // STT
+    finalText = ''; sttRunning = false;
+    if (hasSTT) { recognition = createSTT(); safeStartSTT(recognition); }
+    renderTranscript('');
     // 상태
-    isRecording  = true;
+    isRecording = true;
     recStartTime = Date.now();
-    updateRecStatusUI();
-    startRecTimer();
+    startTimer();
+    updateUI();
   }
 
   function stopRecording() {
     if (!isRecording) return;
     isRecording = false;
-    clearInterval(recTimerID);
-    clearTimeout(sttRestartID);
-
+    clearInterval(recTimerID); clearTimeout(sttRestartID);
     // STT 종료
     sttRunning = false;
     if (recognition) { try { recognition.abort(); } catch(e){} recognition = null; }
-
-    // MediaRecorder 종료 → blob 저장
+    // MediaRecorder 종료
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      var elapsed = Math.round((Date.now() - recStartTime) / 1000);
       var capturedText = finalText.trim();
       mediaRecorder.onstop = function() {
-        var blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-        saveSession(blob, capturedText, elapsed);
+        lastBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+        lastText = capturedText;
         audioChunks = [];
+        showSave();
       };
       mediaRecorder.stop();
     }
-
-    // 마이크 스트림 종료
+    // 스트림 해제
     if (micStream) { micStream.getTracks().forEach(function(t){ t.stop(); }); micStream = null; }
-
-    updateRecStatusUI();
     el('rec-timer-display').textContent = '00:00';
+    updateUI();
   }
 
-  // ── 세션 저장 & 렌더링 ──
-  function saveSession(blob, text, duration) {
-    sessionCounter++;
+  // ── 저장 ──
+  window.dlLastAudio = function() {
+    if (!lastBlob) return;
+    var ext = lastBlob.type.includes('ogg') ? 'ogg' : lastBlob.type.includes('mp4') ? 'mp4' : 'webm';
+    var url = URL.createObjectURL(lastBlob);
     var now = new Date();
-    var ts  = now.getFullYear() + '.' +
-              String(now.getMonth()+1).padStart(2,'0') + '.' +
-              String(now.getDate()).padStart(2,'0') + ' ' +
-              String(now.getHours()).padStart(2,'0') + ':' +
-              String(now.getMinutes()).padStart(2,'0');
-    sessions.unshift({ no: sessionCounter, time: ts, dur: duration, blob: blob, text: text });
-    renderSessions();
-  }
-
-  function renderSessions() {
-    var list = el('rec-sessions-list');
-    var cnt  = el('rec-sessions-count');
-    if (!list) return;
-    cnt.textContent = sessions.length + '건';
-    if (sessions.length === 0) {
-      list.innerHTML = '<div class="rec-session-empty">아직 저장된 훈련이 없습니다.</div>';
-      return;
-    }
-    list.innerHTML = sessions.map(function(s, idx) {
-      var mins = String(Math.floor(s.dur / 60)).padStart(2,'0');
-      var secs = String(s.dur % 60).padStart(2,'0');
-      var preview = s.text
-        ? escHtml(s.text.slice(0, 80)) + (s.text.length > 80 ? '…' : '')
-        : '(음성 인식 내용 없음)';
-      var previewClass = s.text ? '' : ' empty';
-      return '<div class="rec-session-item">' +
-        '<div class="rec-session-meta">' +
-          '<span class="rec-session-num">REC-' + String(s.no).padStart(2,'0') + '</span>' +
-          '<span class="rec-session-time">' + s.time + '</span>' +
-          '<span class="rec-session-dur">' + mins + ':' + secs + '</span>' +
-        '</div>' +
-        '<div class="rec-session-preview' + previewClass + '">' + preview + '</div>' +
-        '<div class="rec-session-btns">' +
-          '<button class="rec-dl-btn audio" onclick="dlAudio(' + idx + ')">🎙 음성 저장</button>' +
-          '<button class="rec-dl-btn"       onclick="dlText('  + idx + ')">📄 텍스트 저장</button>' +
-          '<button class="rec-del-btn"       onclick="delSession(' + idx + ')">✕</button>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-  }
-
-  // ── 다운로드 ──
-  window.dlAudio = function(idx) {
-    var s = sessions[idx]; if (!s || !s.blob) return;
-    var ext = s.blob.type.includes('ogg') ? 'ogg' : s.blob.type.includes('mp4') ? 'mp4' : 'webm';
-    var url = URL.createObjectURL(s.blob);
-    triggerDl(url, '무전훈련_REC-' + String(s.no).padStart(2,'0') + '_' + s.time.replace(/[:.\s]/g,'-') + '.' + ext);
+    var ts  = now.getFullYear() + '' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '_' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
+    triggerDl(url, '무전훈련_' + ts + '.' + ext);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
   };
-  window.dlText = function(idx) {
-    var s = sessions[idx]; if (!s) return;
-    var body = '[ 무전 훈련 기록 ]\n' +
-               '세션: REC-' + String(s.no).padStart(2,'0') + '\n' +
-               '일시: ' + s.time + '\n' +
-               '녹음 시간: ' + String(Math.floor(s.dur/60)).padStart(2,'0') + ':' + String(s.dur%60).padStart(2,'0') + '\n' +
-               '\n[ 음성 인식 내용 ]\n' + (s.text || '(인식 내용 없음)');
+  window.dlLastText = function() {
+    var body = '[ 무전 훈련 기록 ]\n인천소방학교 지휘역량강화센터\n\n[ 음성 인식 내용 ]\n' + (lastText || '(인식 내용 없음)');
     var blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
     var url  = URL.createObjectURL(blob);
-    triggerDl(url, '무전훈련_REC-' + String(s.no).padStart(2,'0') + '.txt');
+    var now  = new Date();
+    var ts   = now.getFullYear() + '' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+    triggerDl(url, '무전훈련_' + ts + '.txt');
     setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
   };
-  window.delSession = function(idx) {
-    sessions.splice(idx, 1);
-    renderSessions();
-  };
-
   function triggerDl(url, name) {
     var a = document.createElement('a');
     a.href = url; a.download = name;
@@ -1752,65 +1614,43 @@ setInterval(updateClock, 1000);
   }
 
   // ── 텍스트 초기화 ──
-  window.clearTranscript = function() {
-    finalText = '';
-    updateTranscriptUI('');
-  };
+  window.clearTranscript = function() { finalText = ''; renderTranscript(''); };
 
   // ── UI 헬퍼 ──
-  function updateRecStatusUI() {
-    var led   = el('rec-led');
-    var stTxt = el('rec-status-text');
-    var btn   = el('rec-mic-btn');
-    var wave  = el('rec-wave');
-    var lbl   = el('rec-btn-label');
+  function updateUI() {
+    var led = el('rec-led'), st = el('rec-status-text'), btn = el('rec-mic-btn'), wave = el('rec-wave'), lbl = el('rec-btn-label');
     if (isRecording) {
-      led && led.classList.add('active');
-      stTxt && (stTxt.textContent = '녹음 중' + (hasSTT ? ' · 음성 인식 진행 중' : ' · STT 미지원 환경'));
-      btn && btn.classList.add('recording');
+      led  && led.classList.add('active');
+      st   && (st.textContent = '녹음 중' + (hasSTT ? ' · 음성 변환 중' : ''));
+      btn  && btn.classList.add('recording');
       wave && wave.classList.add('active');
-      lbl && (lbl.textContent = '탭하여 녹음 중지');
+      lbl  && (lbl.textContent = '탭하여 녹음 중지');
     } else {
-      led && led.classList.remove('active');
-      stTxt && (stTxt.textContent = '대기 중 — 마이크 버튼을 눌러 훈련 시작');
-      btn && btn.classList.remove('recording');
+      led  && led.classList.remove('active');
+      st   && (st.textContent = '대기 중 — 마이크 버튼을 눌러 시작');
+      btn  && btn.classList.remove('recording');
       wave && wave.classList.remove('active');
-      lbl && (lbl.textContent = '탭하여 녹음 시작');
+      lbl  && (lbl.textContent = '탭하여 녹음 시작');
     }
   }
-
-  function updateTranscriptUI(interim) {
-    var finalEl   = el('rec-final-text');
-    var interimEl = el('rec-interim-text');
-    var ph        = el('rec-placeholder');
-    if (!finalEl || !interimEl) return;
-    finalEl.textContent   = finalText;
-    interimEl.textContent = interim || '';
+  function renderTranscript(interim) {
+    var fe = el('rec-final-text'), ie = el('rec-interim-text'), ph = el('rec-placeholder');
+    if (fe) fe.textContent = finalText;
+    if (ie) ie.textContent = interim || '';
     if (ph) ph.style.display = (finalText || interim) ? 'none' : 'block';
   }
-
-  function startRecTimer() {
+  function startTimer() {
     clearInterval(recTimerID);
     recTimerID = setInterval(function() {
-      var elapsed = Math.floor((Date.now() - recStartTime) / 1000);
-      var m = String(Math.floor(elapsed / 60)).padStart(2,'0');
-      var s = String(elapsed % 60).padStart(2,'0');
+      var e = Math.floor((Date.now() - recStartTime) / 1000);
       var d = el('rec-timer-display');
-      if (d) d.textContent = m + ':' + s;
+      if (d) d.textContent = String(Math.floor(e/60)).padStart(2,'0') + ':' + String(e%60).padStart(2,'0');
     }, 500);
   }
-
-  function showRecErr(msg) {
-    var e = el('rec-error-msg');
-    if (e) { e.textContent = '⚠️ ' + msg; e.classList.add('show'); }
-  }
-  function hideRecErr() {
-    var e = el('rec-error-msg');
-    if (e) e.classList.remove('show');
-  }
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  function showErr(msg) { var e = el('rec-error-msg'); if (e) { e.textContent = '⚠️ ' + msg; e.classList.add('show'); } }
+  function hideErr()    { var e = el('rec-error-msg'); if (e) e.classList.remove('show'); }
+  function showSave()   { var w = el('rec-save-wrap'); if (w) w.classList.add('show'); }
+  function hideSave()   { var w = el('rec-save-wrap'); if (w) w.classList.remove('show'); }
 
 })(); // END IIFE
 
