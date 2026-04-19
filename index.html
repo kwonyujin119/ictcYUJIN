@@ -183,8 +183,7 @@ body {
 
 /* ══════════════ TAB2 체크리스트 ══════════════ */
 #tab2 {
-  background: var(--bg-dark);
-  /* 체크리스트: 내부 그리드가 꽉 채움 */
+  background: var(--bg-light);  /* ① 첫번째 탭과 동일한 배경색 */
   display: block;
   overflow: hidden;
 }
@@ -194,71 +193,239 @@ body {
   flex-direction: column;
 }
 
-.ck-prog-wrap { background: #000; padding: 6px 16px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.ck-prog-bg { flex: 1; height: 5px; background: #222; border-radius: 3px; overflow: hidden; }
+/* ── 진행바 (라이트 테마) ── */
+.ck-prog-wrap { background: #fff; padding: 6px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.ck-prog-bg { flex: 1; height: 5px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
 .ck-prog-fill { height: 100%; background: var(--accent); width: 0%; transition: width .4s ease; }
-.ck-prog-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: #7a9acc; white-space: nowrap; }
+.ck-prog-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
 .ck-prog-label span { color: var(--accent); font-weight: 700; }
 
+/* ── 그리드: 데스크탑은 3×4 고정, 모바일은 auto 흐름 + 스크롤 ── */
 .ck-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);   /* 데스크탑 전용 — 반응형에서 override */
   gap: 8px;
   padding: 8px 12px;
   flex: 1;
-  overflow: hidden;
+  overflow: hidden;                      /* 데스크탑 전용 */
 }
 
+/* ── 카드: 기본 흰색, 클릭시 네이비(대비) ── */
 .ck-card {
-  background: #000;
-  border: 2px solid #2a2a2a;
+  background: #fff;                      /* ② 기본 흰색 */
+  border: 2px solid var(--border);
   cursor: pointer;
   user-select: none;
   position: relative;
   overflow: hidden;
-  transition: border-color .2s, box-shadow .2s;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-.ck-card::before { content: ''; position: absolute; inset: 0; background: #fff; transform: scaleY(0); transform-origin: bottom; transition: transform .28s cubic-bezier(.4,0,.2,1); z-index: 0; }
+/* ③ 클릭(on) 시 네이비 슬라이드 — 흰색과 대비 */
+.ck-card::before { content: ''; position: absolute; inset: 0; background: var(--navy); transform: scaleY(0); transform-origin: bottom; transition: transform .28s cubic-bezier(.4,0,.2,1); z-index: 0; }
 .ck-card.on::before { transform: scaleY(1); }
-.ck-card:hover { border-color: #555; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.7); }
-.ck-card.on { border-color: #bbb; }
-.ck-card.final { border-color: #3a2020; }
+.ck-card:hover { border-color: var(--navy3); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(13,27,62,.18); }
+.ck-card.on { border-color: var(--navy); box-shadow: 0 4px 20px rgba(13,27,62,.3); }
+.ck-card.final { border-color: #fcc; background: #fff8f8; }
 
-.ck-num { position: absolute; top: 6px; right: 8px; font-family: 'DM Mono', monospace; font-size: 0.6rem; color: #333; z-index: 1; transition: color .28s; }
-.ck-card.on .ck-num { color: #bbb; }
+.ck-num { position: absolute; top: 6px; right: 8px; font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); z-index: 1; transition: color .28s; }
+.ck-card.on .ck-num { color: rgba(255,255,255,.45); }
 
-.ck-chk { position: absolute; top: 6px; left: 8px; width: 18px; height: 18px; border: 2px solid #333; border-radius: 50%; z-index: 1; display: flex; align-items: center; justify-content: center; transition: border-color .28s, background .28s; }
+.ck-chk { position: absolute; top: 6px; left: 8px; width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 50%; z-index: 1; display: flex; align-items: center; justify-content: center; transition: border-color .28s, background .28s; }
 .ck-chk svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 2.5; fill: none; opacity: 0; transition: opacity .2s; }
 .ck-card.on .ck-chk { background: var(--accent); border-color: var(--accent); }
 .ck-card.on .ck-chk svg { opacity: 1; }
 
-.ck-body { position: relative; z-index: 1; padding: 30px 8px 8px; display: flex; flex-direction: column; gap: 4px; flex: 1; justify-content: center; align-items: center; text-align: center; }
-.ck-subtitle { font-size: 1.0rem; font-weight: 800; letter-spacing: 0.3px; color: #fff; transition: color .28s; line-height: 1.3; word-break: keep-all; }
-.ck-card.on .ck-subtitle { color: #000; }
+.ck-body { position: relative; z-index: 1; padding: 36px 10px 8px; display: flex; flex-direction: column; gap: 4px; flex: 1; justify-content: center; }
+.ck-subtitle { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; color: var(--navy); transition: color .28s; line-height: 1.3; }
+.ck-card.on .ck-subtitle { color: #fff; }                   /* 클릭시 흰색 */
 .ck-card.final .ck-subtitle { color: var(--accent); }
-.ck-divider { width: 28px; height: 2px; background: var(--accent); transition: background .28s; flex-shrink: 0; align-self: center; }
-.ck-card.on .ck-divider { background: #ccc; }
-.ck-content { font-size: 0.78rem; color: #999; line-height: 1.6; transition: color .28s; word-break: keep-all; }
-.ck-card.on .ck-content { color: #444; }
+.ck-card.on.final .ck-subtitle { color: #fff; }
+.ck-divider { width: 28px; height: 2px; background: var(--accent); transition: background .28s; flex-shrink: 0; }
+.ck-card.on .ck-divider { background: rgba(255,255,255,.35); }
+.ck-content { font-size: 0.68rem; color: var(--muted); line-height: 1.5; transition: color .28s; word-break: keep-all; }
+.ck-card.on .ck-content { color: rgba(255,255,255,.75); }   /* 클릭시 밝은 흰색 */
 
 .ck-hint {
   text-align: center;
   font-size: 0.68rem;
-  color: #555;
+  color: var(--muted);
   letter-spacing: 1px;
   padding: 5px 0 2px;
   font-family: 'DM Mono', monospace;
   flex-shrink: 0;
 }
 .ck-footer { text-align: center; padding: 4px 16px; flex-shrink: 0; }
-.ck-reset-btn { background: none; border: 1px solid #333; color: #555; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; padding: 10px 32px; cursor: pointer; transition: border-color .2s, color .2s; }
+.ck-reset-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 2px; padding: 10px 32px; cursor: pointer; transition: border-color .2s, color .2s; }
 .ck-reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ══════════════ TAB3 개인훈련 ══════════════ */
+#tab3 { background: #eef2f8; }
+/* ══ 자가 훈련 모드 ══ */
+#tab3 .train-wrap {
+  max-width: 700px; width: 100%; margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* 상태바 */
+.train-status {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--navy); border-radius: 0;
+  padding: 12px 18px; margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+}
+.train-progress-text { font-family: 'DM Mono',monospace; font-size: 0.75rem; color: #9fb4d8; flex: 1; }
+.train-score-text { font-family: 'DM Mono',monospace; font-size: 0.75rem; color: var(--gold); }
+.train-prog-bar { height: 4px; background: #1f3370; margin-bottom: 16px; border-radius: 2px; overflow: hidden; }
+.train-prog-fill { height: 100%; background: var(--gold); width: 0%; transition: width .4s ease; }
+
+/* 타이머 */
+.train-timer-wrap { text-align: center; margin-bottom: 12px; }
+.train-timer {
+  display: inline-block;
+  font-family: 'DM Mono', monospace; font-size: 2rem; font-weight: 700;
+  color: #fff; background: var(--navy);
+  padding: 8px 28px; border: 2px solid var(--navy3);
+  letter-spacing: 4px;
+  transition: color .3s, border-color .3s;
+}
+.train-timer.urgent { color: var(--accent); border-color: var(--accent); animation: timerPulse .5s infinite; }
+@keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+/* 질문 카드 */
+.train-card {
+  background: #fff;
+  border: 2px solid var(--navy3);
+  border-top: 5px solid var(--navy);
+  padding: 28px 24px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.train-q-label {
+  font-family: 'DM Mono',monospace; font-size: 0.72rem;
+  color: var(--navy); font-weight: 700; margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+.train-q-stage {
+  display: inline-block; font-size: 0.65rem;
+  background: var(--navy); color: #9fb4d8;
+  padding: 2px 10px; margin-bottom: 12px;
+  font-family: 'DM Mono',monospace; letter-spacing: 1px;
+}
+.train-q-text {
+  font-size: 1.05rem; font-weight: 800; color: var(--black);
+  line-height: 1.6; word-break: keep-all;
+}
+
+/* 답변 보기 버튼 */
+.train-reveal-btn {
+  display: block; width: 100%; padding: 16px;
+  background: var(--navy); color: #fff;
+  border: none; font-family: 'Noto Sans KR',sans-serif;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  transition: background .2s; margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+.train-reveal-btn:hover { background: var(--navy2); }
+
+/* 모범 답변 패널 */
+.train-answer {
+  display: none;
+  background: #f5f8ff;
+  border: 1.5px solid var(--navy3);
+  border-left: 5px solid var(--navy);
+  padding: 20px 20px;
+  margin-bottom: 14px;
+  animation: fadeIn .25s ease;
+}
+.train-answer.show { display: block; }
+.train-answer-title {
+  font-size: 0.7rem; font-family: 'DM Mono',monospace;
+  color: var(--navy); letter-spacing: 2px; margin-bottom: 10px; font-weight: 700;
+}
+.train-answer-sum {
+  font-size: 0.9rem; font-weight: 700; color: var(--navy);
+  line-height: 1.6; margin-bottom: 12px; word-break: keep-all;
+}
+.train-answer-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.train-answer-list li {
+  font-size: 0.82rem; color: #333; line-height: 1.7;
+  display: flex; align-items: flex-start; gap: 8px; word-break: keep-all;
+}
+.train-answer-list li::before {
+  content: '▸'; color: var(--navy); font-size: 0.65rem; flex-shrink: 0; margin-top: 5px;
+}
+
+/* 자기 채점 버튼 */
+.train-rate-wrap { display: none; gap: 10px; margin-bottom: 20px; }
+.train-rate-wrap.show { display: grid; grid-template-columns: repeat(3,1fr); }
+.rate-btn {
+  padding: 14px 8px; border: 2px solid; cursor: pointer;
+  font-family: 'Noto Sans KR',sans-serif; font-size: 0.82rem; font-weight: 700;
+  text-align: center; transition: all .2s; background: #fff; line-height: 1.4;
+}
+.rate-btn.perfect { border-color: #2e7d32; color: #2e7d32; }
+.rate-btn.partial  { border-color: #f57f17; color: #f57f17; }
+.rate-btn.miss     { border-color: var(--accent); color: var(--accent); }
+.rate-btn.perfect:hover { background: #2e7d32; color: #fff; }
+.rate-btn.partial:hover  { background: #f57f17; color: #fff; }
+.rate-btn.miss:hover     { background: var(--accent); color: #fff; }
+
+/* 결과 화면 */
+.train-result { display: none; text-align: center; padding: 20px 0; }
+.train-result.show { display: block; }
+.result-score {
+  font-size: 3rem; font-weight: 900; color: var(--navy);
+  font-family: 'DM Mono',monospace; margin-bottom: 6px;
+}
+.result-label { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+.result-breakdown {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 24px;
+}
+.rb-item { padding: 16px 8px; border: 2px solid; }
+.rb-item.p { border-color: #2e7d32; }
+.rb-item.t { border-color: #f57f17; }
+.rb-item.m { border-color: var(--accent); }
+.rb-num { font-size: 1.6rem; font-weight: 900; font-family: 'DM Mono',monospace; }
+.rb-item.p .rb-num { color: #2e7d32; }
+.rb-item.t .rb-num { color: #f57f17; }
+.rb-item.m .rb-num { color: var(--accent); }
+.rb-label { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+.weak-list { text-align: left; background: #fff5f5; border: 1.5px solid #fcc; padding: 14px 16px; margin-bottom: 20px; }
+.weak-list-title { font-size: 0.75rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; font-family: 'DM Mono',monospace; letter-spacing: 1px; }
+.weak-list ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.weak-list li { font-size: 0.78rem; color: #444; }
+.weak-list li::before { content: '⚠ '; color: var(--accent); }
+.train-restart-btn {
+  display: inline-block; padding: 16px 40px;
+  background: var(--navy); color: #fff;
+  border: none; font-family: 'Noto Sans KR',sans-serif;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  transition: background .2s;
+}
+.train-restart-btn:hover { background: var(--navy2); }
+
+/* 시작 화면 */
+.train-start { text-align: center; padding: 10px 0 24px; }
+.train-start h3 { font-size: 1.1rem; font-weight: 900; color: var(--navy); margin-bottom: 10px; }
+.train-start p { font-size: 0.82rem; color: var(--muted); line-height: 1.8; margin-bottom: 24px; word-break: keep-all; }
+.train-start-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 18px 40px; background: var(--navy); color: #fff;
+  border: none; font-family: 'Noto Sans KR',sans-serif;
+  font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s;
+  margin-bottom: 14px; width: 100%; justify-content: center;
+}
+.train-start-btn:hover { background: var(--navy2); }
+.train-mode-info {
+  background: var(--navy); color: #9fb4d8;
+  padding: 14px 16px; font-size: 0.75rem; line-height: 1.9;
+  text-align: left; border-left: 3px solid var(--gold);
+}
+.train-mode-info strong { color: var(--gold); }
 @media (max-width: 600px) {
   .train-q-text { font-size: 0.95rem; }
   .train-answer-sum { font-size: 0.85rem; }
@@ -266,14 +433,33 @@ body {
 
 /* ── 반응형 ── */
 @media (max-width: 900px) {
-  .qa-grid, .ck-grid { grid-template-columns: repeat(2, 1fr); padding: 0 16px 8px; gap: 10px; }
+  .qa-grid { grid-template-columns: repeat(2, 1fr); padding: 0 16px 8px; gap: 10px; }
+  /* ★ 체크리스트 모바일 핵심 수정:
+       grid-template-rows 고정 제거 + overflow 해제로 깨짐 방지 */
+  .ck-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: none;   /* 자동 행 높이 */
+    overflow-y: auto;           /* 스크롤 가능하게 */
+    padding: 10px 12px;
+    gap: 10px;
+    min-height: 0;
+  }
   .stage-bar { margin: 20px 16px 10px; }
-  .ck-grid { padding: 16px; }
+  #tab3.active { padding: 16px 10px; align-items: flex-start; }
   .prog-wrap, .ck-prog-wrap { padding: 10px 16px; }
   .qa-footer, .ck-footer { padding: 0 16px; }
+  /* 모바일에서 카드 최소 높이 보장 */
+  .ck-card { min-height: 90px; }
 }
 @media (max-width: 560px) {
-  .qa-grid, .ck-grid { grid-template-columns: 1fr; }
+  .qa-grid { grid-template-columns: 1fr; }
+  /* ★ 스마트폰: 1열, 카드 높이 자동 */
+  .ck-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    overflow-y: auto;
+  }
+  .ck-card { min-height: 80px; }
   .site-header { padding: 12px 16px; gap: 12px; }
   .site-icon { width: 60px; height: 60px; }
   .site-icon img { width: 58px; height: 58px; }
@@ -281,6 +467,7 @@ body {
   .clock-time { font-size: 0.88rem; }
   .clock-date { display: none; }
   html { font-size: 16px; }
+  .rec-open-btn { font-size: 0.95rem; padding: 22px 16px; }
 }
 
 /* ══════════════ SPLASH SCREEN ══════════════ */
@@ -647,8 +834,63 @@ body {
   flex-direction: column;
   overflow: hidden;
 }
+/* tab3 활성화 시 중앙 정렬 */
+#tab3.active {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
 
 
+/* ══ 음성 녹음 앱 연동 섹션 ══ */
+.rec-section {
+  background: var(--navy);
+  border-left: 4px solid var(--gold);
+  padding: 20px 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.rec-section-title {
+  font-size: 0.95rem; font-weight: 900; color: var(--gold);
+  margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.rec-section-desc {
+  font-size: 0.78rem; color: #9fb4d8;
+  line-height: 1.7; margin-bottom: 16px;
+}
+.rec-btn-group {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 10px;
+}
+.rec-device-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 14px;
+  text-decoration: none; border: 2px solid;
+  transition: all .2s; cursor: pointer;
+  background: rgba(255,255,255,.06);
+}
+.android-btn { border-color: #4caf50; color: #fff; }
+.android-btn:hover { background: rgba(76,175,80,.2); }
+.ios-btn { border-color: #9fb4d8; color: #fff; }
+.ios-btn:hover { background: rgba(159,180,216,.2); }
+.rec-device-btn.dimmed { opacity: .35; pointer-events: none; }
+.rec-device-btn.highlighted { transform: scale(1.03); box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+.rec-device-icon { font-size: 1.6rem; flex-shrink: 0; }
+.rec-device-text { font-size: 0.78rem; line-height: 1.5; text-align: left; }
+.rec-device-text strong { font-size: 0.9rem; display: block; }
+.rec-device-notice {
+  font-size: 0.65rem; color: #7a9acc;
+  font-family: 'DM Mono', monospace; letter-spacing: 1px;
+  margin-top: 4px;
+}
+.train-divider {
+  text-align: center; color: #7a9acc;
+  font-size: 0.72rem; font-family: 'DM Mono',monospace;
+  letter-spacing: 2px; margin: 20px 0 16px;
+  border-top: 1px solid #1f3370; padding-top: 16px;
+}
 
 </style>
 </head>
@@ -669,7 +911,7 @@ body {
   </div>
   <div class="site-title">
     <h1>현장지휘관 훈련 포털</h1>
-    <p>인천소방학교 &nbsp;·&nbsp; 지휘역량강화센터 &nbsp;·&nbsp; 2026</p>
+    <p>권유진 &nbsp;·&nbsp; 인천소방학교 &nbsp;·&nbsp; 지휘역량강화센터 &nbsp;·&nbsp; 2026</p>
   </div>
   <div class="site-clock">
     <div class="clock-time" id="clock-time">00:00:00</div>
@@ -680,6 +922,7 @@ body {
 <nav class="tab-nav">
   <button class="tab-btn active" onclick="switchTab(1,this)">📋 현장지휘관 질문리스트</button>
   <button class="tab-btn"        onclick="switchTab(2,this)">✅ 현장지휘관 체크리스트</button>
+  <button class="tab-btn"        onclick="switchTab(3,this)">🎙 개인 훈련(녹음)</button>
 </nav>
 
 <!-- ═══════════════════════════════════
@@ -999,6 +1242,105 @@ body {
   <div class="ck-footer" style="margin-top:8px;"><button class="ck-reset-btn" onclick="ckResetAll()">↺ &nbsp;전체 초기화</button></div>
 </div><!-- /tab2 -->
 
+<!-- ═══════════════════════════════════
+     TAB 3 — 개인 훈련(녹음)
+═══════════════════════════════════ -->
+<div id="tab3" class="tab-panel">
+<div class="train-wrap">
+
+  <!-- 시작 화면 -->
+  <div class="train-start" id="train-start">
+
+    <!-- ① 음성 녹음 앱 연동 -->
+    <div class="rec-section">
+      <div class="rec-section-title">🎙 음성 녹음으로 훈련하기</div>
+      <p class="rec-section-desc">소리 내어 답변을 말하고 녹음하세요.<br>기기에 맞는 앱이 자동 연결됩니다.</p>
+      <div class="rec-btn-group">
+        <a class="rec-device-btn android-btn" id="samsung-btn"
+           href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.voicenote;end">
+          <span class="rec-device-icon">📱</span>
+          <span class="rec-device-text">삼성<br><strong>음성 녹음</strong></span>
+        </a>
+        <a class="rec-device-btn ios-btn" id="ios-btn"
+           href="voice-memos://">
+          <span class="rec-device-icon">🍎</span>
+          <span class="rec-device-text">아이폰<br><strong>음성 메모</strong></span>
+        </a>
+      </div>
+      <div class="rec-device-notice" id="rec-device-notice">기기를 자동으로 감지합니다...</div>
+    </div>
+
+    <div class="train-divider">— 또는 아래 자가 훈련 모드 활용 —</div>
+
+    <!-- ② 자가 훈련 모드 -->
+    <h3>🎯 자가 훈련 — 플래시카드 모드</h3>
+    <p>18개 질문을 카드 형식으로 훈련합니다.<br>
+    질문을 보고 소리 내어 답한 뒤 모범답변과 비교하여<br>
+    스스로 채점하고 취약 항목을 파악하세요.</p>
+    <button class="train-start-btn" onclick="trainStart()">
+      ▶ 자가 훈련 시작
+    </button>
+    <div class="train-mode-info">
+      <strong>⏱ 타이머</strong> 질문당 60초 (실전 압박감 훈련)<br>
+      <strong>✅ 채점</strong> 완벽 / 부분 / 모름 3단계 자가 평가<br>
+      <strong>📊 분석</strong> 훈련 후 취약 항목 자동 분석 제공<br>
+      <strong>🔄 반복</strong> 취약 항목 집중 재훈련 가능
+    </div>
+  </div>
+
+  <!-- 훈련 진행 화면 -->
+  <div id="train-main" style="display:none;">
+    <div class="train-status">
+      <span class="train-progress-text" id="train-prog-text">Q 1 / 18</span>
+      <span class="train-score-text" id="train-score-text">완벽 0 · 부분 0 · 모름 0</span>
+    </div>
+    <div class="train-prog-bar"><div class="train-prog-fill" id="train-prog-fill"></div></div>
+
+    <div class="train-timer-wrap">
+      <div class="train-timer" id="train-timer">01:00</div>
+    </div>
+
+    <div class="train-card" id="train-card">
+      <div class="train-q-label" id="train-q-label">Q1</div>
+      <div class="train-q-stage" id="train-q-stage">출동 전·중 단계</div>
+      <div class="train-q-text" id="train-q-text"></div>
+    </div>
+
+    <button class="train-reveal-btn" id="train-reveal-btn" onclick="revealAnswer()">
+      💡 모범 답변 확인
+    </button>
+
+    <div class="train-answer" id="train-answer">
+      <div class="train-answer-title">▌ 모범 답변</div>
+      <div class="train-answer-sum" id="train-answer-sum"></div>
+      <ul class="train-answer-list" id="train-answer-list"></ul>
+    </div>
+
+    <div class="train-rate-wrap" id="train-rate-wrap">
+      <button class="rate-btn perfect" onclick="rate('perfect')">✅<br>완벽하게<br>답했다</button>
+      <button class="rate-btn partial"  onclick="rate('partial')">△<br>일부만<br>답했다</button>
+      <button class="rate-btn miss"     onclick="rate('miss')">❌<br>잘<br>모르겠다</button>
+    </div>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div class="train-result" id="train-result">
+    <div class="result-score" id="result-score">0점</div>
+    <div class="result-label" id="result-label">훈련 완료</div>
+    <div class="result-breakdown">
+      <div class="rb-item p"><div class="rb-num" id="rb-p">0</div><div class="rb-label">✅ 완벽</div></div>
+      <div class="rb-item t"><div class="rb-num" id="rb-t">0</div><div class="rb-label">△ 부분</div></div>
+      <div class="rb-item m"><div class="rb-num" id="rb-m">0</div><div class="rb-label">❌ 모름</div></div>
+    </div>
+    <div class="weak-list" id="weak-list" style="display:none;">
+      <div class="weak-list-title">⚠ 집중 보완 필요 항목</div>
+      <ul id="weak-ul"></ul>
+    </div>
+    <button class="train-restart-btn" onclick="trainRestart()">🔄 다시 훈련하기</button>
+  </div>
+
+</div>
+</div><!-- /tab3 -->
 
 <script>
 /* ── 탭 전환 ── */
@@ -1025,6 +1367,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const nh = document.querySelector('.tab-nav')?.offsetHeight || 120;
   document.documentElement.style.setProperty('--header-h', hh + 'px');
   document.documentElement.style.setProperty('--nav-h', nh + 'px');
+  detectDevice();
 });
 
 /* ── TAB1 QA ── */
@@ -1155,6 +1498,191 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
+
+/* ══ 자가 훈련 모드 ══ */
+const TRAIN_DATA = [
+  { q:'출동 중 정보수집은 왜 해야하나요?', stage:'출동 전·중 단계',
+    sum:'현장 도착 전 사고상황을 미리 파악하여 신속한 초기 의사결정을 가능하게 하기 때문입니다.',
+    items:['출동지령 단계: 재난유형·규모·인명피해 정보 파악','출동 중: 신고자 추가정보, 날씨·시간대, 119현장지원시스템 활용','현장도착 단계: 건물 배치·사고 진행상황·활동 필요사항 확인','도착 후: 소방활동조사서·관계자 진술·대원 정찰보고 활용','출동 중 불필요한 무선교신을 삼가야 추가정보 전파를 놓치지 않음'] },
+  { q:'지휘권 선언은 왜 해야하나요? 안하면 어떻게 될까요?', stage:'출동 전·중 단계',
+    sum:'모든 사고현장에 반드시 1명의 현장지휘관이 존재함을 공식화하는 행위로, 지휘체계 확립과 혼선 방지를 위해 필수입니다.',
+    items:['지휘권 선언 = 선착대장이 초기 무선보고를 실시하는 것','미선언 시: 후착대가 임의로 독자적 활동 → 중복배치·혼선 발생','후착 상급간부가 현 지휘관 지휘에 개입 가능','지휘권 공백은 인명·재산 피해 확대의 직접적 원인','지휘권을 선언하지 않은 상위지휘관은 하위지휘관 지휘에 개입 불가'] },
+  { q:'초기상황보고는 왜 해야하며, 반드시 포함해야 할 내용은?', stage:'초기 현장지휘 단계',
+    sum:'지휘권을 공식 선언하고, 상황실 및 후착대에게 현장상황을 전파하여 체계적인 대응활동을 시작하기 위해 반드시 실시해야 합니다.',
+    items:['① 현장에 도착한 출동대 명칭','② 간단한 사고상황 (사고유형·건물 개요)','③ 현재 사고상황 (연소확대 중·대량 환자발생 등)','④ 시도 중인 현장활동','⑤ 전략 선언 (공격 또는 방어전략)','⑥ 대원 안전과 직결되는 사항','⑦ 지휘권 장악·지휘관 신원·지휘소 위치','⑧ 필요한 자원 요청'] },
+  { q:'지휘형태는 무엇이 있으며, 어떤 지휘형태를 취해야 하나요?', stage:'초기 현장지휘 단계',
+    sum:'지휘형태는 4가지로 구분되며, 고정지휘를 최우선으로 고려해야 합니다.',
+    items:['① 조사형태: 사고징후 없어 신고지역을 돌아보며 확인','② 임무병행지휘(전진지휘): 대원 지원과 지휘 병행, 3~4분 내 미해결 시 고정지휘 전환','③ 고정지휘: 건물 외부 고정위치에서 지휘 전담 — 우선 선택','④ 이동지휘: 이동하면서 지휘 — 전문지휘관은 반드시 지양','핵심: 사고규모가 크거나 복잡·확대 가능성 있으면 초기부터 고정지휘'] },
+  { q:'공격·방어전략 선정 기준과 방어전략 전환 상황은?', stage:'초기 현장지휘 단계',
+    sum:'구조대상자 유무와 대원 위험도를 최우선 기준으로 하며, 상황 변화에 따라 즉시 방어전략으로 전환해야 합니다.',
+    items:['공격전략: 구조 가능한 요구조자 있음, 진입·체류 가능, 화재범위 통제 가능','방어전략: 건물 전체 화재 진행, 붕괴우려, 요구조자 생존가능성 희박','방어전략 전환: 연소확대 저지 실패, 붕괴 징후, 화재 급변, 급수제약, 대원 위험','공격·방어전략 동시 적용 절대 금지'] },
+  { q:'방면설정은 왜 하며, 어떤 기준으로 방면을 구분하나요?', stage:'초기 현장지휘 단계',
+    sum:'각 방향별 책임구역을 명확히 하여 자원을 체계적으로 배치하고 지휘통제를 효율화하기 위해 실시합니다.',
+    items:['목적: 구역별 책임 명확화, 소방력 중복배치 방지','구분 기준: 건물 전면·후면·좌측·우측을 A~D방면으로 구분','방면별 단위지휘관(분대장) 지정으로 통솔범위 최적화','방면 설정 시 연소확대 방향과 인접건물 위험도를 우선 고려','방면별 소방용수 공급시스템과 통신채널을 별도 운용'] },
+  { q:'대기단계 운영은 왜 해야하나요? 어떤 효과가 있나요?', stage:'자원 관리 단계',
+    sum:'현장지휘관이 계획적으로 소방력을 배치하고 혼선 없는 현장 운영을 위해 반드시 실시해야 합니다.',
+    items:['효과 ①: 현장의 과도한 차량 밀집 방지','효과 ②: 상황평가 후 출동대 배치할 시간적 여유 제공','효과 ③: 현장 인근 위치로 효과적인 임무부여 가능','효과 ④: 중요한 사고 초기단계에 무선 교신량 감소','효과 ⑤: 현장투입 출동대의 활동위치 추적관리 용이','효과 ⑥: 혼란과 압박 없이 작전계획 수립 및 실행 가능','대기1단계: 현장 100m 이격 / 대기2단계: 30분 이상 지속 시 자원대기소 지정'] },
+  { q:'1선펌프차와 중요물탱크는 왜 지정해야 하며, 기준은?', stage:'자원 관리 단계',
+    sum:'현장에서 수관 꼬임·혼선을 방지하고 안정적인 소방용수 공급을 위해 필수적으로 시행합니다.',
+    items:['1선펌프차: 수관을 연결·사용하는 펌프차를 명확히 지정해야 수관 혼선 방지','지정 기준: 통상 선착대 펌프차량이 1선, 관창 추가 시 방면별로 추가 지정','지정된 1선펌프차 외 펌프차에서는 가급적 수관 미전개','중요물탱크: 1선펌프차 1대당 물탱크차 3대 순환 배정 (급수→보수→대기)','소화전 우선 점령, 없을 경우 물탱크차 순환급수 시스템 구성'] },
+  { q:'3단계 소방력 배치모델(The 3 Deep)은 무엇인가요?', stage:'자원 관리 단계',
+    sum:'돌발상황 발생 시에도 즉각 대처할 수 있도록 소방력을 3단계로 구분하여 운영하는 체계입니다.',
+    items:['1단계(위험지역 활동): 대응활동이 필요한 HOT ZONE에 우선 배치','2단계(직전대기): 위험지역 바로 바깥에서 즉시 투입 대기','3단계(예비소방력): 자원대기소에서 교대·예비 소방력으로 대기','고층건물 화재 시 자원대기소: 발화층의 2개층 아래층에 설치','먼저 1단계 배치 완료 → 2단계 직전대기 → 나머지 3단계로 운영'] },
+  { q:'전술 우선순위(RECEO)는 무엇인가요?', stage:'전술 및 작전 단계',
+    sum:'복잡한 사고상황에서 임무 배분의 기준이 되는 RECEO 순서입니다.',
+    items:['R (Rescue): 인명구조 및 구급 — 모든 작전의 1순위','E (Exposure): 외부 연소확대 방지 — 인접건물·차량 확산 차단','C (Contain): 내부 연소확대 방지 — 건물 내 다른 구획 확대 저지','E (Extinguish): 화재진압 — 화점 직접 진압','O (Overhaul): 종합점검·조사 — 잔화정리·환경오염 조치·원인조사'] },
+  { q:'RECEO에 따른 임무 배분과 인명구조 세부 우선순위는?', stage:'전술 및 작전 단계',
+    sum:'RECEO 순서에 따라 자원을 순차적으로 배치하며, 인명구조 내에서도 세부 우선순위가 있습니다.',
+    items:['인명구조 세부: ①가장 심각하게 위협받는 곳 ②가장 많은 수 ③발화지역 잔류자 ④노출지역 잔류자','고층건물 화재: 화재 진행 중인 층의 상층 구조대상자 우선','장애인·노인 등 구조약자에 대한 배려 별도 고려','완전히 화재로 뒤덮인 지역 희생자는 1분 내 사망 → 무리한 진입 금지','소방대원의 생명 > 어떤 재산'] },
+  { q:'신속동료구조팀(RIT)은 필수로 지정해야 하나요? 임무는?', stage:'전술 및 작전 단계',
+    sum:'RIT는 위험지역에서 활동하는 대원의 비상탈출 지원을 위해 반드시 지정해야 하는 안전장치입니다.',
+    items:['지정 필수: HOT ZONE 내 대원이 활동하는 모든 현장에서 지정','임무 ①: 긴급탈출(MAYDAY) 상황 발생 시 즉시 투입','임무 ②: 고립·부상 대원 구조 및 탈출 지원','임무 ③: 건물구조·진출입 통로·내부활동 대원 현황 상시 파악','임무 ④: 현장지휘관 지시에 따라 즉시 투입 가능한 준비 유지'] },
+  { q:'현장에서 통신을 잘하기 위한 요령은 무엇인가요?', stage:'통신·안전 단계',
+    sum:'간결하고 명확한 교신을 원칙으로 합니다. 현장지휘관은 무전교신 시작·유지·통제의 유일한 책임자입니다.',
+    items:['기본 원칙: 짧고 명확하고 간결하게 / 산만한 형식주의 회피','우선순위: 중요한 사항부터 먼저 교신','임무 중심: 어떻게보다 무엇을 할 것인가에 집중','임무 복창: 수신 후 내용을 간단히 복창하여 확인','무선 최소화: 대면 가능 시 대면 의사소통 우선','대규모 사고 시 지휘망·작전망·지원망으로 채널 분리 운용'] },
+  { q:'현장안전담당의 역할과 지정 시점은?', stage:'통신·안전 단계',
+    sum:'모든 대원의 안전을 전담 모니터링하고 위험요인을 사전에 차단하는 핵심 안전 기능입니다.',
+    items:['지정 시점: 현장의 복잡성·위험도에 따라 현장지휘관이 판단하여 조기 지정','역할 ①: 사고 상황 모니터링 및 대원 안전 보장 수단 개발','역할 ②: 위험요인 분석 및 안전대책 수립·이행 조언','역할 ③: 현장지휘관에게 안전 관련 독립적 조언권 행사','역할 ④: 운영부서와 함께 활동하며 대원 안전 확보'] },
+  { q:'디브리핑은 왜 중요하며, 효과적인 6단계 프로세스는?', stage:'디브리핑 단계',
+    sum:'현장활동의 문제점을 발견하고 개선하여 향후 교훈으로 삼는 핵심 학습 과정입니다.',
+    items:['1단계: 우리의 목표는 무엇이었나? — 목표 확인','2단계: 실제 어떻게 수행했고 무슨 일이 발생했나? — 다양한 관점 청취','3단계: 왜 발생했는가? — 원인·결과 분석, 해결책 도출','4단계: 다음부터는 어떻게 개선해야 하나? — 실현 가능한 개선점 집중','5단계: 즉시 공유할 교훈은? — 성공사례·도전과제·극복방법 공유','6단계: 어떤 후속조치가 필요한가? — SOP·교육훈련 반영사항 구체화'] },
+  { q:'출동대는 꼭 현장지휘관의 임무를 받고 활동해야 하는 이유는?', stage:'디브리핑 단계',
+    sum:'지휘통일 원칙에 따라 모든 출동대는 반드시 현장지휘관의 임무지시 후 활동을 시작해야 합니다.',
+    items:['이유 ①: 출동대 중복배치 방지','이유 ②: 차량 혼잡 방지 — 무계획적 부서로 중요차량 접근 불가','이유 ③: 무선교신 혼선 방지','이유 ④: 대원 안전 확보 — 임의 활동 출동대는 다른 출동대를 위험하게 만듦','이유 ⑤: 체계적 소방력 운용 — 현장지휘관이 계획적 배치 구상 및 실현 가능'] },
+  { q:'지휘권 이양은 언제, 어떻게 해야 하나요?', stage:'지휘권 이양 단계',
+    sum:'사고 확대, 상급자 도착, 법령 요구 등의 상황에서 공식 절차에 따라 진행하며, 지휘권 공백이 없어야 합니다.',
+    items:['이양 시점: ①대형·복합사고로 상급지휘관 필요 ②기존 지휘관 교대 필요 ③기관장 지시 ④법령 요구','5단계 절차: ①공동평가→②대면브리핑→③이양시점결정→④전체공지→⑤종전지휘관 새임무 지정','브리핑 내용: 사고상황·대응목표·작전계획·자원배치·통신계획·잠재위험','원칙: 가능한 대면방식으로 이양, 지휘권 공백 절대 금지','이양 시점은 모든 구성원에게 반드시 전달'] },
+  { q:'작전계획은 어떤 상황에서 수정해야 하나요?', stage:'지휘권 이양 단계',
+    sum:'수시로 현장 상황변화와 활동결과를 평가하여 작전계획의 적정성을 확인하고 필요 시 즉각 수정해야 합니다.',
+    items:['수정 판단기준: 주요요소 현행화·대원 안전·전략·전술 우선순위 적합성 확인','전체양호: 현재 작전계획 지속 추진','소수수정 필요: 현 상황에 맞게 활동 조정','중요수정 필요: 작전계획 중요요소 변경·추가, 추가자원 투입 고려','계획변경 필요: 작전계획 전면 재검토, 새로운 조직 설립','평가 근거: 현장지휘관 육안관찰 + 단위지휘관의 진행경과 보고'] }
+];
+
+let trainIdx = 0, trainTimer = null, trainSecs = 60;
+let scores = { perfect:0, partial:0, miss:0 };
+let weakItems = [];
+const TRAIN_TOTAL_SECS = 60;
+
+function trainStart() {
+  trainIdx = 0;
+  scores = { perfect:0, partial:0, miss:0 };
+  weakItems = [];
+  document.getElementById('train-start').style.display = 'none';
+  document.getElementById('train-result').classList.remove('show');
+  document.getElementById('train-main').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const d = TRAIN_DATA[trainIdx];
+  document.getElementById('train-q-label').textContent = 'Q' + (trainIdx+1);
+  document.getElementById('train-q-stage').textContent = d.stage;
+  document.getElementById('train-q-text').textContent = d.q;
+  document.getElementById('train-answer').classList.remove('show');
+  document.getElementById('train-rate-wrap').classList.remove('show');
+  document.getElementById('train-reveal-btn').style.display = 'block';
+  document.getElementById('train-prog-text').textContent = 'Q ' + (trainIdx+1) + ' / ' + TRAIN_DATA.length;
+  document.getElementById('train-prog-fill').style.width = (trainIdx / TRAIN_DATA.length * 100) + '%';
+  updateScoreText();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(trainTimer);
+  trainSecs = TRAIN_TOTAL_SECS;
+  updateTimerDisplay();
+  trainTimer = setInterval(() => {
+    trainSecs--;
+    updateTimerDisplay();
+    if (trainSecs <= 0) { clearInterval(trainTimer); revealAnswer(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('train-timer');
+  const m = String(Math.floor(trainSecs/60)).padStart(2,'0');
+  const s = String(trainSecs%60).padStart(2,'0');
+  el.textContent = m + ':' + s;
+  el.classList.toggle('urgent', trainSecs <= 10);
+}
+
+function revealAnswer() {
+  clearInterval(trainTimer);
+  const d = TRAIN_DATA[trainIdx];
+  document.getElementById('train-answer-sum').textContent = d.sum;
+  const ul = document.getElementById('train-answer-list');
+  ul.innerHTML = d.items.map(i => '<li>' + i + '</li>').join('');
+  document.getElementById('train-answer').classList.add('show');
+  document.getElementById('train-rate-wrap').classList.add('show');
+  document.getElementById('train-reveal-btn').style.display = 'none';
+}
+
+function rate(type) {
+  scores[type]++;
+  if (type !== 'perfect') weakItems.push('Q' + (trainIdx+1) + ' ' + TRAIN_DATA[trainIdx].q.slice(0,22) + '…');
+  trainIdx++;
+  if (trainIdx >= TRAIN_DATA.length) { showResult(); }
+  else { loadQuestion(); }
+}
+
+function updateScoreText() {
+  document.getElementById('train-score-text').textContent =
+    '완벽 ' + scores.perfect + ' · 부분 ' + scores.partial + ' · 모름 ' + scores.miss;
+}
+
+function showResult() {
+  document.getElementById('train-main').style.display = 'none';
+  const result = document.getElementById('train-result');
+  result.classList.add('show');
+  const total = TRAIN_DATA.length;
+  const pct = Math.round((scores.perfect * 1 + scores.partial * 0.5) / total * 100);
+  document.getElementById('result-score').textContent = pct + '점';
+  let label = pct >= 90 ? '🏅 우수 — 현장지휘관 역량 탁월!' :
+              pct >= 70 ? '🔥 양호 — 꾸준한 훈련으로 완성하세요!' :
+                          '⚠️ 보완 필요 — 취약 항목을 집중 학습하세요!';
+  document.getElementById('result-label').textContent = label;
+  document.getElementById('rb-p').textContent = scores.perfect;
+  document.getElementById('rb-t').textContent = scores.partial;
+  document.getElementById('rb-m').textContent = scores.miss;
+  if (weakItems.length > 0) {
+    document.getElementById('weak-list').style.display = 'block';
+    document.getElementById('weak-ul').innerHTML = weakItems.map(i => '<li>' + i + '</li>').join('');
+  }
+  if (pct >= 90) showBadge('qa');
+}
+
+function trainRestart() {
+  document.getElementById('train-result').classList.remove('show');
+  document.getElementById('train-start').style.display = 'block';
+}
+
+
+/* ── 기기 자동 감지 ── */
+function detectDevice() {
+  const ua = navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const isAndroid = /android/.test(ua);
+  const notice = document.getElementById('rec-device-notice');
+  const samsungBtn = document.getElementById('samsung-btn');
+  const iosBtn = document.getElementById('ios-btn');
+  if (!notice || !samsungBtn || !iosBtn) return;
+
+  if (isIOS) {
+    notice.textContent = '✅ 아이폰 감지 — 음성 메모 앱으로 연결됩니다';
+    notice.style.color = '#9fb4d8';
+    samsungBtn.classList.add('dimmed');
+    iosBtn.classList.add('highlighted');
+  } else if (isAndroid) {
+    notice.textContent = '✅ 안드로이드 감지 — 삼성 음성 녹음 앱으로 연결됩니다';
+    notice.style.color = '#81c784';
+    iosBtn.classList.add('dimmed');
+    samsungBtn.classList.add('highlighted');
+  } else {
+    notice.textContent = 'PC에서는 아래 자가 훈련 모드를 이용해 주세요';
+    notice.style.color = '#f57f17';
+    samsungBtn.classList.add('dimmed');
+    iosBtn.classList.add('dimmed');
+  }
+}
 
 </script>
 
